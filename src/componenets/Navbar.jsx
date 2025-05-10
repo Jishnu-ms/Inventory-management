@@ -7,7 +7,10 @@ const Navbar = () => {
       <Link to="/" className="hover:underline">Dashboard</Link>
       <Link to="/products" className="hover:underline">Product List</Link>
       <Link to="/add-product" className="hover:underline">Add Product</Link>
+    <Link to="/billing" className="hover:underline">Billing</Link>
+
     </nav>
+
   );
 };
 

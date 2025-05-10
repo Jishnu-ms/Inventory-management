@@ -4,6 +4,7 @@ import Navbar from './componenets/Navbar';
 import Dashboard from './pages/Dashboard';
 import ProductList from './pages/Products/ProductList';
 import AddProductForm from './pages/Products/AddProductForm';
+import Billing from './pages/Billing';
 
 const App = () => {
   const [products, setProducts] = useState([
@@ -42,6 +43,8 @@ const App = () => {
             path="/add-product"
             element={<AddProductForm addProduct={addProduct} />}
           />
+          <Route path="/billing" element={<Billing products={products} />} />
+
         </Routes>
       </div>
     </Router>
