@@ -5,6 +5,8 @@ import Dashboard from './pages/Dashboard';
 import ProductList from './pages/Products/ProductList';
 import AddProductForm from './pages/Products/AddProductForm';
 import Billing from './pages/Billing';
+import EditProductForm from './pages/Products/EditProductForm';
+
 
 const App = () => {
   const [products, setProducts] = useState([
@@ -43,7 +45,16 @@ const App = () => {
             path="/add-product"
             element={<AddProductForm addProduct={addProduct} />}
           />
-          <Route path="/billing" element={<Billing products={products} />} />
+          <Route
+              path="/billing"
+              element={<Billing products={products} setProducts={setProducts} />}
+              />
+              <Route
+  path="/edit-product/:id"
+  element={<EditProductForm products={products} setProducts={setProducts} />}
+/>
+
+
 
         </Routes>
       </div>

@@ -1,19 +1,24 @@
 import React, { useState, useRef } from 'react';
 
-const Billing = ({ products }) => {
+const Billing = ({ products, setProducts }) => {
   const [cart, setCart] = useState([]);
   const billRef = useRef();
 
   const addToCart = (product) => {
-    const exists = cart.find(item => item.name === product.name);
-    if (exists) {
-      setCart(cart.map(item =>
-        item.name === product.name
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
+    const cartItem = cart.find(item => item.name === product.name);
+    const inCartQuantity = cartItem ? cartItem.quantity : 0;
+    if (inCartQuantity < product.quantity) {
+      if (cartItem) {
+        setCart(cart.map(item =>
+          item.name === product.name
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        ));
+      } else {
+        setCart([...cart, { ...product, quantity: 1 }]);
+      }
     } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
+      alert("Not enough stock available!");
     }
   };
 
@@ -26,6 +31,22 @@ const Billing = ({ products }) => {
   };
 
   const handlePrint = () => {
+    // Deduct stock
+    const updatedProducts = products.map(product => {
+      const cartItem = cart.find(item => item.name === product.name);
+      if (cartItem) {
+        return {
+          ...product,
+          quantity: Math.max(product.quantity - cartItem.quantity, 0),
+        };
+      }
+      return product;
+    });
+
+    setProducts(updatedProducts); // Update stock
+    setCart([]); // Clear cart
+
+    // Print bill
     const printContent = billRef.current.innerHTML;
     const printWindow = window.open('', '', 'width=800,height=600');
     printWindow.document.write(`

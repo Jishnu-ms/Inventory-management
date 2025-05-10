@@ -1,59 +1,77 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const EditProductForm = ({ product, updateProduct }) => {
-  const [productName, setProductName] = useState(product.name);
-  const [quantity, setQuantity] = useState(product.quantity);
-  const [price, setPrice] = useState(product.price);
+const EditProductForm = ({ products, setProducts }) => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const index = parseInt(id);
+  const product = products[index];
+
+  const [form, setForm] = useState({ name: '', price: '', quantity: '' });
+
+  useEffect(() => {
+    if (product) {
+      setForm(product);
+    }
+  }, [product]);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const updatedProduct = {
-      ...product,
-      name: productName,
-      quantity: parseInt(quantity),
-      price: parseFloat(price),
+    const updated = [...products];
+    updated[index] = {
+      ...form,
+      price: parseFloat(form.price),
+      quantity: parseInt(form.quantity),
     };
-
-    updateProduct(updatedProduct);  // Update the product in the parent component
+    setProducts(updated);
+    navigate('/products');
   };
 
+  if (!product) return <div className="p-6">Product not found</div>;
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block">Product Name:</label>
+    <div className="p-6 max-w-md mx-auto">
+      <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-          className="p-2 border border-gray-300 rounded w-full"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          placeholder="Product Name"
+          className="w-full border p-2 rounded"
           required
         />
-      </div>
-      <div>
-        <label className="block">Quantity:</label>
         <input
           type="number"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          className="p-2 border border-gray-300 rounded w-full"
+          name="price"
+          value={form.price}
+          onChange={handleChange}
+          placeholder="Price"
+          className="w-full border p-2 rounded"
           required
         />
-      </div>
-      <div>
-        <label className="block">Price:</label>
         <input
           type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="p-2 border border-gray-300 rounded w-full"
+          name="quantity"
+          value={form.quantity}
+          onChange={handleChange}
+          placeholder="Quantity"
+          className="w-full border p-2 rounded"
           required
         />
-      </div>
-      <button type="submit" className="bg-green-500 text-white p-2 rounded mt-4">
-        Update Product
-      </button>
-    </form>
+        <button
+          type="submit"
+          className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+        >
+          Save Changes
+        </button>
+      </form>
+    </div>
   );
 };
 
