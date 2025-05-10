@@ -3,16 +3,23 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
-    <nav className="bg-gray-800 text-white px-6 py-4 flex gap-4">
-      <Link to="/" className="hover:underline">Dashboard</Link>
-      <Link to="/products" className="hover:underline">Product List</Link>
-      <Link to="/add-product" className="hover:underline">Add Product</Link>
-    <Link to="/billing" className="hover:underline">Billing</Link>
-
+  <nav className="navbar">
+      <h1 style={{ color: 'var(--primary-color)' }}>🧾 Stock & Billing</h1>
+      <div style={{ marginTop: '10px' }}>
+        <Link to="/" style={linkStyle}>Dashboard</Link>
+        <Link to="/products" style={linkStyle}>Products</Link>
+        <Link to="/add-product" style={linkStyle}>Add Product</Link>
+        <Link to="/billing" style={linkStyle}>Billing</Link>
+      </div>
     </nav>
 
   );
 };
-
+const linkStyle = {
+  color: 'var(--text-color)',
+  textDecoration: 'none',
+  marginRight: '20px',
+  fontWeight: '500',
+};
 export default Navbar;
 

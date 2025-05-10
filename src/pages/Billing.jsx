@@ -1,119 +1,139 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import './Billing.css';
 
 const Billing = ({ products, setProducts }) => {
-  const [cart, setCart] = useState([]);
-  const billRef = useRef();
+  const [billedItems, setBilledItems] = useState([]);
 
-  const addToCart = (product) => {
-    const cartItem = cart.find(item => item.name === product.name);
-    const inCartQuantity = cartItem ? cartItem.quantity : 0;
-    if (inCartQuantity < product.quantity) {
-      if (cartItem) {
-        setCart(cart.map(item =>
-          item.name === product.name
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        ));
-      } else {
-        setCart([...cart, { ...product, quantity: 1 }]);
-      }
+  const addToBill = (index) => {
+    const product = products[index];
+
+    if (product.quantity <= 0) {
+      alert('Out of stock!');
+      return;
+    }
+
+    const existingIndex = billedItems.findIndex(item => item.name === product.name);
+
+    const updatedProducts = [...products];
+    updatedProducts[index].quantity -= 1;
+    setProducts(updatedProducts);
+
+    if (existingIndex !== -1) {
+      const updatedBill = [...billedItems];
+      updatedBill[existingIndex].count += 1;
+      setBilledItems(updatedBill);
     } else {
-      alert("Not enough stock available!");
+      setBilledItems([...billedItems, { ...product, count: 1 }]);
     }
   };
 
-  const removeFromCart = (productName) => {
-    setCart(cart.filter(item => item.name !== productName));
-  };
+  const removeFromBill = (indexToRemove) => {
+    const item = billedItems[indexToRemove];
 
-  const getTotal = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    const updatedProducts = [...products];
+    const productIndex = products.findIndex(p => p.name === item.name);
+    if (productIndex !== -1) {
+      updatedProducts[productIndex].quantity += 1;
+      setProducts(updatedProducts);
+    }
+
+    const updated = [...billedItems];
+    if (updated[indexToRemove].count > 1) {
+      updated[indexToRemove].count -= 1;
+    } else {
+      updated.splice(indexToRemove, 1);
+    }
+    setBilledItems(updated);
   };
 
   const handlePrint = () => {
-    // Deduct stock
-    const updatedProducts = products.map(product => {
-      const cartItem = cart.find(item => item.name === product.name);
-      if (cartItem) {
-        return {
-          ...product,
-          quantity: Math.max(product.quantity - cartItem.quantity, 0),
-        };
-      }
-      return product;
-    });
+    const navbar = document.querySelector('.navbar');
+    if (navbar) navbar.style.display = 'none';
 
-    setProducts(updatedProducts); // Update stock
-    setCart([]); // Clear cart
+    window.print();
 
-    // Print bill
-    const printContent = billRef.current.innerHTML;
-    const printWindow = window.open('', '', 'width=800,height=600');
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Bill</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            .bill-item { margin-bottom: 10px; }
-            .total { font-weight: bold; margin-top: 20px; }
-          </style>
-        </head>
-        <body>${printContent}</body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
+    if (navbar) setTimeout(() => (navbar.style.display = 'block'), 1000);
   };
 
-  return (
-    <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">Billing</h2>
+  const totalAmount = billedItems.reduce(
+    (sum, item) => sum + item.price * item.count,
+    0
+  );
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+  return (
+    <div className="container">
+      <h2>🧾 Billing</h2>
+
+      <div className="no-print">
+        <h3>Available Products</h3>
         {products.map((product, index) => (
-          <div key={index} className="border p-4 rounded shadow">
-            <h4 className="font-semibold">{product.name}</h4>
+          <div key={index} className="card">
+            <h4>{product.name}</h4>
+            <p>Quantity: {product.quantity}</p>
             <p>Price: ₹{product.price}</p>
-            <p>In Stock: {product.quantity}</p>
             <button
-              onClick={() => addToCart(product)}
-              className="mt-2 bg-green-600 text-white py-1 px-3 rounded hover:bg-green-700"
+              onClick={() => addToBill(index)}
+              disabled={product.quantity <= 0}
             >
-              Add to Bill
+              {product.quantity > 0 ? '➕ Add to Bill' : '❌ Out of Stock'}
             </button>
           </div>
         ))}
       </div>
 
-      {cart.length > 0 && (
-        <div>
-          <div ref={billRef} className="border rounded p-4 bg-white shadow mb-4">
-            <h3 className="text-xl font-medium mb-2">Bill Summary:</h3>
-            {cart.map((item, index) => (
-              <div key={index} className="bill-item flex justify-between">
-                <span>{item.name} x {item.quantity}</span>
-                <span>₹{item.price * item.quantity}</span>
-              </div>
+      <h3>Billed Items</h3>
+      {billedItems.length === 0 ? (
+        <p>No items in bill.</p>
+      ) : (
+        <table className="bill-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+              <th className="no-print">Remove</th>
+            </tr>
+          </thead>
+          <tbody>
+            {billedItems.map((item, index) => (
+              <tr key={index}>
+                <td>{item.name}</td>
+                <td>{item.count}</td>
+                <td>₹{item.price}</td>
+                <td>₹{item.price * item.count}</td>
+                <td className="no-print">
+                  <button onClick={() => removeFromBill(index)}>🗑️</button>
+                </td>
+              </tr>
             ))}
-            <hr className="my-2" />
-            <div className="total text-lg">
-              Total: ₹{getTotal().toFixed(2)}
-            </div>
-          </div>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan="3"><strong>Total</strong></td>
+              <td colSpan="2"><strong>₹{totalAmount}</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      )}
 
-          <button
-            onClick={handlePrint}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Print Bill
-          </button>
-        </div>
+      {billedItems.length > 0 && (
+        <button
+          onClick={handlePrint}
+          className="no-print"
+          style={{ marginTop: '20px' }}
+        >
+          🖨️ Print Bill
+        </button>
       )}
     </div>
   );
 };
 
 export default Billing;
+
+
+
+
+
+

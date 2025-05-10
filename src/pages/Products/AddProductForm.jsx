@@ -1,63 +1,63 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AddProductForm = ({ addProduct }) => {
-  const [productName, setProductName] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
+  const [product, setProduct] = useState({ name: '', quantity: '', price: '' });
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setProduct({ ...product, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const newProduct = {
-      name: productName,
-      quantity: parseInt(quantity),
-      price: parseFloat(price),
-    };
-
-    addProduct(newProduct);  // Passing the new product to the parent component
-    setProductName('');
-    setQuantity('');
-    setPrice('');
+    addProduct({
+      ...product,
+      quantity: parseInt(product.quantity),
+      price: parseFloat(product.price),
+    });
+    navigate('/products');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block">Product Name:</label>
+    <div className="container">
+      <h2>➕ Add New Product</h2>
+      <form onSubmit={handleSubmit} className="form">
         <input
           type="text"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-          className="p-2 border border-gray-300 rounded w-full"
+          name="name"
+          placeholder="Product Name"
+          value={product.name}
+          onChange={handleChange}
           required
         />
-      </div>
-      <div>
-        <label className="block">Quantity:</label>
+         <br></br>
+        <br></br>
         <input
           type="number"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          className="p-2 border border-gray-300 rounded w-full"
+          name="quantity"
+          placeholder="Quantity"
+          value={product.quantity}
+          onChange={handleChange}
           required
         />
-      </div>
-      <div>
-        <label className="block">Price:</label>
+        <br></br>
+        <br></br>
+        
         <input
           type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="p-2 border border-gray-300 rounded w-full"
+          name="price"
+          placeholder="Price"
+          value={product.price}
+          onChange={handleChange}
           required
         />
-      </div>
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded mt-4">
-        Add Product
-      </button>
-    </form>
+        <button type="submit">Add Product</button>
+      </form>
+    </div>
   );
 };
 
 export default AddProductForm;
+
 

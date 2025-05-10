@@ -1,0 +1,38 @@
+.bill-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.bill-table th,
+.bill-table td {
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  text-align: center;
+}
+
+.bill-table thead {
+  background-color: var(--primary-color);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .bill-table {
+    background-color: white;
+    color: black;
+  }
+
+  .bill-table th {
+    background-color: #eee;
+  }
+}

@@ -1,20 +1,157 @@
-/* index.css */
-nav ul {
-  list-style: none;
+:root {
+  --bg-color: #1e1e2f;
+  --card-bg: #2a2a3d;
+  --text-color: #f0f0f0;
+  --input-bg: #333;
+  --border-color: #444;
+  --primary-color: #4e88ff;
+  --primary-hover: #3a6edc;
+  --accent-color: #4e88ff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Container for pages */
+.container {
+  padding: 20px;
+}
+
+/* Generic Card */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Buttons */
+button {
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Inputs */
+input, select, textarea {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Dashboard layout */
+.dashboard-grid {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
-nav ul li a {
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
+.dashboard-grid .card {
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
 }
 
-h2, h3 {
-  color: #333;
+/* Form container */
+.form-container {
+  max-width: 420px;
+  margin: 40px auto;
+  background-color: var(--card-bg);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
 }
 
-div {
-  margin: 20px 0;
+.form-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+.form-container label {
+  display: block;
+  margin: 10px 0 5px;
+  font-size: 0.95rem;
+}
+
+.form-container input {
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.form-container button {
+  margin-top: 20px;
+  width: 100%;
+  background-color: var(--accent-color);
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+/* Hide elements with class .no-print during printing */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .container {
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .card {
+    border: none;
+    box-shadow: none;
+    background: none;
+  }
+
+  .total-card {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 20px;
+    border-top: 1px solid #999;
+    padding-top: 10px;
+  }
+}
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }

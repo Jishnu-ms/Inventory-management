@@ -1,79 +1,67 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const EditProductForm = ({ products, setProducts }) => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const index = parseInt(id);
-  const product = products[index];
+const EditProductForm = ({ products, updateProduct }) => {
+  const { index } = useParams(); // Extract the index from URL params
+  const navigate = useNavigate(); // To navigate after updating
+  const [form, setForm] = useState({ name: '', quantity: '', price: '' });
 
-  const [form, setForm] = useState({ name: '', price: '', quantity: '' });
-
+  // Populate the form with the existing product details
   useEffect(() => {
-    if (product) {
-      setForm(product);
+    if (products[index]) {
+      setForm(products[index]);
     }
-  }, [product]);
+  }, [index, products]);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value }); // Update form state
   };
 
+  // Handle form submission and update the product in the list
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updated = [...products];
-    updated[index] = {
-      ...form,
-      price: parseFloat(form.price),
-      quantity: parseInt(form.quantity),
-    };
-    setProducts(updated);
-    navigate('/products');
+    const updatedProducts = [...products];  // Copy the products array
+    updatedProducts[index] = form;         // Update the selected product
+    updateProduct(updatedProducts);        // Call the updateProduct function passed via props
+    navigate('/products');                 // Navigate back to the product list
   };
 
-  if (!product) return <div className="p-6">Product not found</div>;
-
   return (
-    <div className="p-6 max-w-md mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="container">
+      <h2>💻 Edit Product</h2>
+      <form className="form" onSubmit={handleSubmit}>
+        <label><strong>Product Name</strong></label>
         <input
-          type="text"
           name="name"
           value={form.name}
           onChange={handleChange}
-          placeholder="Product Name"
-          className="w-full border p-2 rounded"
           required
         />
+        <br></br>
+        <br></br>
+        <label><strong>Quantity</strong></label>
         <input
-          type="number"
-          name="price"
-          value={form.price}
-          onChange={handleChange}
-          placeholder="Price"
-          className="w-full border p-2 rounded"
-          required
-        />
-        <input
-          type="number"
           name="quantity"
+          type="number"
           value={form.quantity}
           onChange={handleChange}
-          placeholder="Quantity"
-          className="w-full border p-2 rounded"
           required
         />
-        <button
-          type="submit"
-          className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
-        >
-          Save Changes
-        </button>
+        <br></br>
+        <br></br>
+        <label><strong>Price</strong></label>
+        <input
+          name="price"
+          type="number"
+          value={form.price}
+          onChange={handleChange}
+          required
+        />
+
+        <button type="submit">Update Product</button>
       </form>
     </div>
   );
 };
 
 export default EditProductForm;
-

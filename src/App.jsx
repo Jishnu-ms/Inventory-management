@@ -7,7 +7,6 @@ import AddProductForm from './pages/Products/AddProductForm';
 import Billing from './pages/Billing';
 import EditProductForm from './pages/Products/EditProductForm';
 
-
 const App = () => {
   const [products, setProducts] = useState([
     { name: 'Product 1', quantity: 10, price: 20 },
@@ -21,9 +20,15 @@ const App = () => {
   };
 
   // Delete a product from the state
-  const deleteProduct = (index) => {
-    const updatedProducts = products.filter((_, i) => i !== index);
-    setProducts(updatedProducts);
+const deleteProduct = (indexToDelete) => {
+  const updatedProducts = products.filter((_, index) => index !== indexToDelete);
+  setProducts(updatedProducts);
+};
+
+
+  // Update a product in the state
+  const updateProduct = (updatedProducts) => {
+    setProducts(updatedProducts); // Update the products list with the updated one
   };
 
   return (
@@ -31,7 +36,10 @@ const App = () => {
       <Navbar />
       <div className="p-6">
         <Routes>
+          {/* Dashboard route */}
           <Route path="/" element={<Dashboard products={products} />} />
+
+          {/* Product List route */}
           <Route
             path="/products"
             element={
@@ -41,25 +49,49 @@ const App = () => {
               />
             }
           />
+
+          {/* Add Product route */}
           <Route
             path="/add-product"
             element={<AddProductForm addProduct={addProduct} />}
           />
-          <Route
-              path="/billing"
-              element={<Billing products={products} setProducts={setProducts} />}
-              />
-              <Route
-  path="/edit-product/:id"
-  element={<EditProductForm products={products} setProducts={setProducts} />}
-/>
+          
 
+          {/* Billing route */}
+          <Route
+            path="/billing"
+            element={<Billing products={products} setProducts={setProducts} />}
+          />
+
+          {/* Edit Product route with dynamic 'index' as URL parameter */}
+          <Route
+            path="/edit-product/:index"
+            element={
+              <EditProductForm
+                products={products}
+                updateProduct={updateProduct} // Pass updateProduct function to EditProductForm
+              />
+            }
+            
+          />
+  <Route
+  path="/products"
+  element={
+    <ProductList
+      products={products}
+      deleteProduct={deleteProduct} // ✅ passed properly
+    />
+  }
+/>
 
 
         </Routes>
       </div>
+      
     </Router>
+    
   );
 };
 
 export default App;
+

@@ -1,35 +1,42 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ProductList = ({ products }) => {
+const ProductList = ({ products, deleteProduct }) => {
   const navigate = useNavigate();
 
-  const handleEdit = (index) => {
-    navigate(`/edit-product/${index}`);
-  };
-
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">Product List</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {products.map((product, index) => (
-          <div key={index} className="border p-4 rounded shadow">
-            <h4 className="font-semibold">{product.name}</h4>
+    <div className="container">
+      <h2>📦 Product List</h2>
+      {products.length === 0 ? (
+        <p>No products available.</p>
+      ) : (
+        products.map((product, index) => (
+          <div key={index} className="card">
+            <h3>{product.name}</h3>
+            <p>Quantity: {product.quantity}</p>
             <p>Price: ₹{product.price}</p>
-            <p>Stock: {product.quantity}</p>
+            <button onClick={() => navigate(`/edit-product/${index}`)}>
+              ✏️ Edit
+            </button>
             <button
-              onClick={() => handleEdit(index)}
-              className="mt-2 bg-yellow-600 text-white py-1 px-3 rounded hover:bg-yellow-700"
+              style={{ marginLeft: '10px', backgroundColor: '#e74c3c' }}
+              onClick={() => {
+                if (window.confirm('Are you sure you want to delete this product?')) {
+                  deleteProduct(index);
+                }
+              }}
             >
-              Edit
+              🗑️ Delete
             </button>
           </div>
-        ))}
-      </div>
+        ))
+      )}
     </div>
   );
 };
 
 export default ProductList;
+
 
 
 
