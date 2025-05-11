@@ -1,16 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ProductList = ({ products, deleteProduct }) => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filtered products based on search query
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="container">
       <h2>📦 Product List</h2>
-      {products.length === 0 ? (
-        <p>No products available.</p>
+
+      {/* Search Bar */}
+      <input
+        type="text"
+        placeholder="Search by product name..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        style={{
+          padding: '10px',
+          width: '50%',
+          marginBottom: '20px',
+          borderRadius: '5px',
+         
+        }}
+      />
+
+      {filteredProducts.length === 0 ? (
+        <p>No matching products found.</p>
       ) : (
-        products.map((product, index) => (
+        filteredProducts.map((product, index) => (
           <div key={index} className="card">
             <h3>{product.name}</h3>
             <p>Quantity: {product.quantity}</p>

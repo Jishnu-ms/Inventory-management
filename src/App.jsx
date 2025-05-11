@@ -8,11 +8,12 @@ import Billing from './pages/Billing';
 import EditProductForm from './pages/Products/EditProductForm';
 
 const App = () => {
-  const [products, setProducts] = useState([
-    { name: 'Product 1', quantity: 10, price: 20 },
-    { name: 'Product 2', quantity: 5, price: 30 },
-    { name: 'Product 3', quantity: 2, price: 50 },
-  ]);
+const [products, setProducts] = useState([
+  { name: 'Product 1', quantity: 10, price: 20, barcode: '1234567890' },
+  { name: 'Product 2', quantity: 5, price: 30, barcode: '2345678901' },
+  { name: 'Product 3', quantity: 2, price: 50, barcode: '3456789012' },
+]);
+
 
   // Add a product to the state
   const addProduct = (newProduct) => {

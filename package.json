@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "react": "^19.1.0",
+    "react-barcode-reader": "^0.0.2",
     "react-dom": "^19.1.0",
+    "react-qr-reader": "^3.0.0-beta-1",
     "react-router-dom": "^7.6.0"
   },
   "devDependencies": {
