@@ -1,9 +1,16 @@
+/* Main Table Styling */
 .bill-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
   background-color: var(--card-bg);
   color: var(--text-color);
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
 }
 
 .bill-table th,
@@ -17,23 +24,49 @@
   background-color: var(--primary-color);
 }
 
+/* Print-Specific Styles */
 @media print {
+  /* Hide elements that shouldn't appear during print */
   .no-print {
     display: none !important;
   }
 
+  /* General body styling for print */
   body {
     background: white;
     color: black;
-    
   }
 
+  /* Table styling for print */
   .bill-table {
     background-color: white;
     color: black;
+    width: 100%;
+    border-collapse: collapse;
   }
 
-  .bill-table th {
+  .bill-table th,
+  .bill-table td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .bill-table thead {
     background-color: #eee;
   }
+
+  .bill-table tfoot td {
+    font-weight: bold;
+  }
+
+  /* Styling for the container during print */
+  .container {
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    color: black;
+    font-size: 14px;
+  }
 }
+
