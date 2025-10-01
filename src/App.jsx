@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './componenets/Navbar';
 import Dashboard from './pages/Dashboard';
@@ -6,45 +6,52 @@ import ProductList from './pages/Products/ProductList';
 import AddProductForm from './pages/Products/AddProductForm';
 import Billing from './pages/Billing';
 import EditProductForm from './pages/Products/EditProductForm';
-import CustomerHistory from './pages/Customers/CustomerHistory';
+import AddCustomerForm from './pages/Customers/AddCustomerForm';
+
+import Customers from './pages/Customers';
+
+// Firebase imports
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebase";
 
 const App = () => {
-  const [customers, setCustomers] = useState([
-    { name: 'John Doe', phone: '1234567890', history: [] },
-    { name: 'Jane Smith', phone: '9876543210', history: [] }
-  ]);
-
+  const [customers, setCustomers] = useState([]);
   const [products, setProducts] = useState([
     { name: 'Product 1', quantity: 10, price: 20, barcode: '1234567890' },
     { name: 'Product 2', quantity: 5, price: 30, barcode: '2345678901' },
     { name: 'Product 3', quantity: 2, price: 50, barcode: '3456789012' },
   ]);
 
-  // Add a product to the state
+  // 🔥 Fetch customers from Firestore
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "customers"));
+        const customerList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCustomers(customerList);
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      }
+    };
+    fetchCustomers();
+  }, []);
+
+  // Products logic stays local for now
   const addProduct = (newProduct) => {
     setProducts([...products, newProduct]);
   };
 
-  // Delete a product from the state
   const deleteProduct = (indexToDelete) => {
     const updatedProducts = products.filter((_, index) => index !== indexToDelete);
     setProducts(updatedProducts);
   };
 
-  // Update a product in the state
   const updateProduct = (updatedProducts) => {
     setProducts(updatedProducts);
   };
-
-  // Add a new customer to the state
-  const addCustomer = (newCustomer) => {
-    setCustomers([...customers, newCustomer]);
-  };
-  <Route
-  path="/add-customer"
-  element={<addCustomer addCustomer={addCustomer} />}
-/>
-
 
   return (
     <Router>
@@ -61,14 +68,12 @@ const App = () => {
             path="/billing"
             element={<Billing products={products} setProducts={setProducts} customers={customers} />}
           />
-          <Route
-            path="/edit-product/:index"
-            element={<EditProductForm products={products} updateProduct={updateProduct} />}
-          />
-          <Route
-            path="/customer-history/:customerIndex"
-            element={<CustomerHistory customers={customers} />}
-          />
+          <Route path="/edit-product/:id" element={<EditProductForm />} />
+          {/* ✅ AddCustomerForm directly writes to Firestore, no props needed */}
+          <Route path="/add-customer" element={<AddCustomerForm />} />
+
+          {/* ✅ Pass Firestore customers list */}
+          <Route path="/customers" element={<Customers customers={customers} />} />
         </Routes>
       </div>
     </Router>
@@ -76,4 +81,3 @@ const App = () => {
 };
 
 export default App;
-

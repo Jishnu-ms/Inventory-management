@@ -1,0 +1,146 @@
+/* Container */
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #1e1e2f;
+  border-radius: 12px;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #00d084;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+/* Search Bar */
+.search-bar {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #444;
+  background: #2c2c3e;
+  color: #fff;
+  margin-bottom: 1.8rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+
+
+/* Product Card */
+.product-card {
+  display: flex;
+  align-items: flex-start;
+  background: #2c2c3e;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+
+}
+
+/* Product Image */
+.product-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-right: 1.5rem;
+  border: 2px solid #00d084;
+}
+
+/* Product Info */
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem; /* spacing between lines */
+}
+
+.product-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #00d084;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Label and value styling */
+.product-info p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ccc;
+  display: flex;
+  justify-content: space-between;
+}
+
+.product-info p span {
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Actions */
+.product-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-left: 1.2rem;
+}
+
+.product-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.product-actions button:hover {
+  transform: translateY(-2px);
+ 
+}
+
+.delete-btn {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background: #c0392b;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .product-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+  }
+
+  .product-image {
+    margin-bottom: 1rem;
+  }
+
+  .product-actions {
+    flex-direction: row;
+    gap: 0.7rem;
+    margin-top: 1rem;
+  }
+
+  .product-info p {
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+}

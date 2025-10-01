@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../firebase"; // adjust path if needed
 import "./AddCustomerForm.css";
 
-const AddCustomerForm = ({ addCustomer }) => {
+const AddCustomerForm = () => {
   const [customer, setCustomer] = useState({
     name: "",
     phone: "",
@@ -20,16 +22,25 @@ const AddCustomerForm = ({ addCustomer }) => {
     setCustomer({ ...customer, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!customer.name || !customer.phone) {
-      alert("Please fill out Name and Phone Number.");
+      alert("⚠️ Please fill out Name and Phone Number.");
       return;
     }
 
-    addCustomer(customer);
-    alert("✅ Customer added successfully!");
-    navigate("/customers"); // redirect to customer list (adjust route if needed)
+    try {
+      await addDoc(collection(db, "customers"), {
+        ...customer,
+        createdAt: serverTimestamp(),
+      });
+
+      alert("✅ Customer added successfully!");
+      navigate("/customers"); // redirect to customer list
+    } catch (error) {
+      console.error("Error adding customer:", error);
+      alert("❌ Failed to add customer. Please try again.");
+    }
   };
 
   return (
@@ -40,7 +51,7 @@ const AddCustomerForm = ({ addCustomer }) => {
 
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-row">
-          <input
+          <input className="dark-input" 
             type="text"
             name="name"
             placeholder="Full Name"
@@ -48,7 +59,7 @@ const AddCustomerForm = ({ addCustomer }) => {
             onChange={handleChange}
             required
           />
-          <input
+          <input className="dark-input" 
             type="text"
             name="phone"
             placeholder="Phone Number"
@@ -59,7 +70,7 @@ const AddCustomerForm = ({ addCustomer }) => {
         </div>
 
         <div className="form-row">
-          <input
+          <input className="dark-input" 
             type="email"
             name="email"
             placeholder="Email Address"
@@ -68,7 +79,7 @@ const AddCustomerForm = ({ addCustomer }) => {
           />
         </div>
 
-        <textarea
+        <textarea className="dark-input" 
           name="address"
           placeholder="Customer Address"
           value={customer.address}
@@ -76,7 +87,7 @@ const AddCustomerForm = ({ addCustomer }) => {
           rows={3}
         />
 
-        <textarea
+        <textarea className="dark-input" 
           name="notes"
           placeholder="Additional Notes"
           value={customer.notes}
@@ -85,7 +96,7 @@ const AddCustomerForm = ({ addCustomer }) => {
         />
 
         <div className="form-row">
-          <input
+          <input className="dark-input" 
             type="date"
             name="dateJoined"
             value={customer.dateJoined}
