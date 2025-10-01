@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { db, auth } from "../firebase";
+import { signOut } from "firebase/auth";
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -30,6 +31,15 @@ const Dashboard = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      window.location.reload(); // simple way to return to login page
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
 
   if (loading)
     return <p style={{ color: "#fff", textAlign: "center" }}>Loading dashboard...</p>;
@@ -62,7 +72,15 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <h2>📊 Inventory Dashboard</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2>📊 Inventory Dashboard</h2>
+        <button
+          onClick={handleLogout}
+          style={{ padding: "8px 16px", cursor: "pointer", background: "#ff4d4f", color: "#fff", border: "none", borderRadius: "4px" }}
+        >
+          Logout
+        </button>
+      </div>
 
       <div className="dashboard-grid">
         <div className="dashboard-card">
