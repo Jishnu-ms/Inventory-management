@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase';
 import './AddProductForm.css';
@@ -24,8 +24,9 @@ const EditProductForm = ({ onClose }) => {
 
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [suppliers, setSuppliers] = useState([]); // suppliers from DB
 
-  // Fetch product from Firestore
+  // Fetch product
   useEffect(() => {
     if (!id) return;
 
@@ -48,6 +49,20 @@ const EditProductForm = ({ onClose }) => {
 
     fetchProduct();
   }, [id]);
+
+  // Fetch suppliers from Firestore
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, 'suppliers'));
+        const supplierList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setSuppliers(supplierList);
+      } catch (error) {
+        console.error('Error fetching suppliers:', error);
+      }
+    };
+    fetchSuppliers();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -120,7 +135,7 @@ const EditProductForm = ({ onClose }) => {
         </div>
 
         <div className="form-row">
-          <select className="dark-input"  name="category" value={product.category} onChange={handleChange} required>
+          <select className="dark-input" name="category" value={product.category} onChange={handleChange} required>
             <option value="">Select Category</option>
             <option value="Electronics">Electronics</option>
             <option value="Grocery">Grocery</option>
@@ -128,11 +143,11 @@ const EditProductForm = ({ onClose }) => {
             <option value="Stationery">Stationery</option>
           </select>
 
-          <select className="dark-input"  name="supplier" value={product.supplier} onChange={handleChange}>
+          <select className="dark-input" name="supplier" value={product.supplier} onChange={handleChange} required>
             <option value="">Select Supplier</option>
-            <option value="Supplier A">Supplier A</option>
-            <option value="Supplier B">Supplier B</option>
-            <option value="Supplier C">Supplier C</option>
+            {suppliers.map(sup => (
+              <option key={sup.id} value={sup.name}>{sup.name}</option>
+            ))}
           </select>
         </div>
 
@@ -179,7 +194,7 @@ const EditProductForm = ({ onClose }) => {
           rows={3}
         />
 
-        {/* <input type="file" name="image" accept="image/*" onChange={handleChange} /> */}
+        <input type="file" name="image" accept="image/*" onChange={handleChange} />
 
         {imagePreview && <img src={imagePreview} alt="Preview" className="image-preview" />}
 

@@ -1,19 +1,41 @@
 /* Container */
 .staff-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 2rem;
   background: #1e1e2f;
+  padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
   color: #fff;
+  margin: 2rem auto;
+  max-width: 1000px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
 }
-/* Header */
+
 .staff-container h2 {
-  font-size: 1.5rem;
-  color: #00d084;
   margin-bottom: 1.5rem;
+  text-align: center;
+  color: #00d084;
+  font-size: 1.8rem;
+}
+
+/* Search */
+.staff-search {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #2c2c3e;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.staff-search:focus {
+  outline: none;
+  border-color: #00d084;
+  box-shadow: 0 0 6px #00d084;
 }
 
 /* Form */
@@ -21,12 +43,13 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-row {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .staff-form input {
@@ -38,16 +61,17 @@
   color: #fff;
   font-size: 1rem;
   transition: border 0.2s, box-shadow 0.2s;
+  min-width: 180px;
 }
 
 .staff-form input:focus {
   outline: none;
   border-color: #00d084;
-  box-shadow: 0 0 5px #00d084;
+  box-shadow: 0 0 6px #00d084;
 }
 
 .staff-form button {
-  padding: 0.85rem 1.5rem;
+  padding: 0.9rem 1.5rem;
   border-radius: 8px;
   border: none;
   background: linear-gradient(90deg, #00d084, #00a3ff);
@@ -60,42 +84,22 @@
 
 .staff-form button:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 208, 132, 0.4);
 }
 
 .staff-form button:active {
   transform: translateY(1px);
 }
 
-/* Search Bar */
-.staff-search {
-  width: 100%;
-  max-width: 500px;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #2c2c3e;
-  color: #fff;
-  font-size: 1rem;
-  margin: 1rem 0 1.5rem 0;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-
-.staff-search:focus {
-  outline: none;
-  border-color: #00d084;
-  box-shadow: 0 0 5px #00d084;
-}
-
-/* Table Wrapper for horizontal scroll */
+/* Table wrapper */
 .table-wrapper {
-  overflow-x: auto;
+  overflow-x: hidden; /* disable scroll by default */
 }
 
-/* Staff Table */
 .staff-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  min-width: 600px; /* ensures columns don’t squash */
 }
 
 .staff-table th,
@@ -103,6 +107,7 @@
   padding: 0.75rem 1rem;
   text-align: left;
   border-bottom: 1px solid #333;
+  white-space: nowrap; /* keep text from wrapping */
 }
 
 .staff-table th {
@@ -112,18 +117,104 @@
 }
 
 .staff-table tr:hover {
-  background: #2c2c3e;
+  background: rgba(0, 208, 132, 0.1);
+  transition: background 0.3s ease;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-buttons button {
+  flex: 1;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background: #00a3ff;
+  color: white;
+}
+
+.delete-btn {
+  background: #ff4d4d;
+  color: white;
+}
+
+.action-buttons button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
 }
 
 /* Responsive */
-@media (max-width: 700px) {
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .staff-container {
+    padding: 1.5rem;
+  }
   .staff-table th,
   .staff-table td {
-    font-size: 0.85rem;
-    padding: 0.5rem;
+    font-size: 0.95rem;
+    padding: 0.65rem;
   }
+}
 
+/* Mobile */
+@media (max-width: 500px) {
   .form-row {
     flex-direction: column;
+  }
+
+  .staff-form input{
+    width: 90%;
+  }
+  .staff-form button,
+  .staff-search {
+    width: 100%;
+  }
+
+  .table-wrapper {
+    overflow-x: auto; /* enable scroll only on mobile */
+  }
+
+  .staff-table {
+    min-width: 500px; /* keeps layout intact, forces scroll */
+  }
+
+  .staff-table th,
+  .staff-table td {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 400px) {
+  .staff-container {
+    padding: 1rem;
+  }
+
+  .staff-container h2 {
+    font-size: 1.4rem;
+  }
+
+  .staff-form button {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons button {
+    width: 100%;
   }
 }

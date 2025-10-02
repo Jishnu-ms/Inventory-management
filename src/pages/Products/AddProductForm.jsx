@@ -96,7 +96,7 @@ const AddProductForm = ({ onClose }) => {
     <div className="container">
       <div className="form-header">
         <h2>➕ Add New Product</h2>
-        <button className="close-btn" onClick={onClose}>✖</button>
+        <button className="close-btn" onClick={onClose}></button>
       </div>
 
       <form onSubmit={handleSubmit} className="form">

@@ -339,6 +339,7 @@ const Billing = () => {
       )}
 
       {/* Old Bills */}
+         
       <div className="old-bills-section no-print">
         
         <div>
@@ -353,6 +354,7 @@ const Billing = () => {
           />
         </div>
         {filteredOldBills.length ? (
+          <div className="table-wrapper">
           <table className="bill-table">
             <thead>
               <tr>
@@ -407,6 +409,7 @@ const Billing = () => {
               ))}
             </tbody>
           </table>
+          </div>
         ) : <p>No bills found.</p>}
       </div>
     </div>

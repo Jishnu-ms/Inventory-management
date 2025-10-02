@@ -269,24 +269,67 @@
 /* ===========================
    Responsive
 =========================== */
-@media (max-width: 700px) {
-  .table th,
-  .table td {
-    font-size: 0.85rem;
-    padding: 0.5rem;
+
+@media (max-width: 1024px) {
+  .table {
+    min-width: 600px;
   }
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+   .table-wrapper {
+    overflow-x: auto; /* enable scroll only on mobile */
+  }
+
+  .table {
+    min-width: 700px; /* keeps layout intact, forces scroll */
+  }
+
+ 
+
+  .container input,
+.container select,
+.container textarea {
+    width: 90%;
+}
+
+.search-bar {
+    width: 100%;
+}
 
   .search-bar {
     font-size: 0.95rem;
     padding: 0.6rem 0.8rem;
   }
+}
 
-  .form-row {
-    flex-direction: column;
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .table {
+    min-width: 100%;
+  }
+
+  .btn-edit,
+  .btn-remove {
+    width: 60px;
+    padding: 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .form button {
+    font-size: 1rem;
+    padding: 0.7rem 1.2rem;
   }
 
   .edit-popup-content {
     max-width: 95%;
+    padding: 1.5rem;
   }
-
 }

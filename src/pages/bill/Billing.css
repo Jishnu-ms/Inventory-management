@@ -202,3 +202,47 @@
 
 /* Hide elements when printing */
 @media print { .no-print { display: none; } }
+
+/* Responsive */
+@media (max-width: 700px) {
+
+
+
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+ 
+  .billing-container {
+    width: 80%;
+  }
+
+     .table-wrapper {
+    overflow-x: auto; /* enable scroll only on mobile */
+  }
+
+  .table {
+    min-width: 700px; /* keeps layout intact, forces scroll */
+  }
+}
+
+/* Extra Small Screens */
+@media (max-width: 400px) {
+  .supplier-container {
+    padding: 1rem;
+  }
+
+  .supplier-container h2 {
+    font-size: 1.3rem;
+  }
+
+  .supplier-form button {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+
+  .popup-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

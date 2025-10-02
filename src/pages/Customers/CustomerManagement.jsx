@@ -223,6 +223,7 @@ const Customers = () => {
       ) : filteredCustomers.length === 0 ? (
         <p>No customers found.</p>
       ) : (
+         <div className="table-wrapper">
         <table className="table">
           <thead>
             <tr>
@@ -262,6 +263,7 @@ const Customers = () => {
             ))}
           </tbody>
         </table>
+         </div>
       )}
 
       {/* Edit Customer Popup */}
@@ -333,8 +335,10 @@ const Customers = () => {
             </div>
           </div>
         </div>
+       
       )}
     </div>
+    
   );
 };
 
