@@ -179,7 +179,7 @@ const EditProductForm = ({ onClose }) => {
           rows={3}
         />
 
-        <input type="file" name="image" accept="image/*" onChange={handleChange} />
+        {/* <input type="file" name="image" accept="image/*" onChange={handleChange} /> */}
 
         {imagePreview && <img src={imagePreview} alt="Preview" className="image-preview" />}
 

@@ -1,0 +1,291 @@
+/* ===========================
+   Customer Container
+=========================== */
+.container {
+  max-width: 1000px;
+  width: 95%;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #1e1e2f;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box; /* include padding in width */
+  overflow-x: hidden;
+}
+
+/* Header */
+.container h2 {
+  font-size: 1.8rem;
+  color: #00d084;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* ===========================
+   Search Bar
+=========================== */
+.search-bar {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #2c2c3e;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: #00d084;
+  box-shadow: 0 0 5px #00d084;
+}
+
+/* ===========================
+   Customer Table
+=========================== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto; /* horizontal scroll if table is too wide */
+  margin-top: 1rem;
+}
+
+.table {
+  width: 100%;
+  min-width: 700px; /* table minimum width */
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.table th {
+  background: #2c2c3e;
+  color: #00d084;
+  font-weight: bold;
+}
+
+.table tr:hover {
+  background: #2c2c3e;
+}
+
+/* ===========================
+   Form Inputs (Add/Edit)
+=========================== */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.container input,
+.container select,
+.container textarea {
+  flex: 1;
+  min-width: 150px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #2c2c3e;
+  color: #fff;
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.container input:focus,
+.container select:focus,
+.container textarea:focus {
+  outline: none;
+  border-color: #00d084;
+  box-shadow: 0 0 5px #00d084;
+}
+
+/* ===========================
+   Form Buttons (Gradient Only)
+=========================== */
+.form button {
+  margin-top: 1rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(90deg, #00d084, #00a3ff);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.form button:hover {
+  transform: translateY(-2px);
+}
+
+.form button:active {
+  transform: translateY(1px);
+}
+
+/* ===========================
+   Table / Action Buttons
+=========================== */
+.btn-edit {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: #3498db;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: 0.2s;
+}
+
+.btn-edit:hover {
+  background: #2980b9;
+}
+
+.btn-remove {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  background: #e74c3c;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-remove:hover {
+  background: #c0392b;
+}
+
+.btn-update {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  background: #00d084;
+  color: #1e1e2f;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-update:hover {
+  background: #00b36e;
+}
+
+.btn-cancel {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  background: #e74c3c;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #c0392b;
+}
+
+/* ===========================
+   Edit Popup
+=========================== */
+.edit-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  padding: 1rem;
+}
+
+.edit-popup-content {
+  background: #222;
+  padding: 25px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+  animation: popupAppear 0.25s ease-out;
+}
+
+@keyframes popupAppear {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.edit-item-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.edit-item-row input {
+  flex: 1;
+  min-width: 60px;
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background: #111;
+  color: #fff;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.edit-item-row input:focus {
+  border-color: #00d084;
+  box-shadow: 0 0 5px #00d084;
+}
+
+.edit-popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+@media (max-width: 700px) {
+  .table th,
+  .table td {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  .search-bar {
+    font-size: 0.95rem;
+    padding: 0.6rem 0.8rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .edit-popup-content {
+    max-width: 95%;
+  }
+}

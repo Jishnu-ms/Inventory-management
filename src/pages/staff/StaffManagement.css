@@ -1,0 +1,129 @@
+/* Container */
+.staff-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #1e1e2f;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+/* Header */
+.staff-container h2 {
+  font-size: 1.5rem;
+  color: #00d084;
+  margin-bottom: 1.5rem;
+}
+
+/* Form */
+.staff-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.staff-form input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #2c2c3e;
+  color: #fff;
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.staff-form input:focus {
+  outline: none;
+  border-color: #00d084;
+  box-shadow: 0 0 5px #00d084;
+}
+
+.staff-form button {
+  padding: 0.85rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(90deg, #00d084, #00a3ff);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.staff-form button:hover {
+  transform: translateY(-2px);
+}
+
+.staff-form button:active {
+  transform: translateY(1px);
+}
+
+/* Search Bar */
+.staff-search {
+  width: 100%;
+  max-width: 500px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #2c2c3e;
+  color: #fff;
+  font-size: 1rem;
+  margin: 1rem 0 1.5rem 0;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.staff-search:focus {
+  outline: none;
+  border-color: #00d084;
+  box-shadow: 0 0 5px #00d084;
+}
+
+/* Table Wrapper for horizontal scroll */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+/* Staff Table */
+.staff-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.staff-table th,
+.staff-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.staff-table th {
+  background: #2c2c3e;
+  color: #00d084;
+  font-weight: bold;
+}
+
+.staff-table tr:hover {
+  background: #2c2c3e;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .staff-table th,
+  .staff-table td {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+}

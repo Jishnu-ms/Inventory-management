@@ -111,6 +111,7 @@ input[type="file"]::file-selector-button {
 
 input[type="file"]::file-selector-button:hover {
   background: #00a36f;
+  
 }
 
 /* Image Preview */

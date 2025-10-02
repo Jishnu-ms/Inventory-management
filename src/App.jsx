@@ -4,11 +4,14 @@ import Navbar from './componenets/Navbar';
 import Dashboard from './pages/Dashboard';
 import ProductList from './pages/Products/ProductList';
 import AddProductForm from './pages/Products/AddProductForm';
-import Billing from './pages/Billing';
+import Billing from './pages/bill/Billing';
 import EditProductForm from './pages/Products/EditProductForm';
-import AddCustomerForm from './pages/Customers/AddCustomerForm';
-import Customers from './pages/Customers';
+
+
 import Login from './pages/Login';
+import StaffManagement from './pages/staff/StaffManagement';
+import Customers from './pages/Customers/CustomerManagement';
+import SuppliersManagement from './pages/SuppliersManagement/SuppliersManagement';
 
 // Firebase imports
 import { collection, getDocs } from "firebase/firestore";
@@ -91,16 +94,29 @@ const App = () => {
             path="/edit-product/:id"
             element={isAdmin ? <EditProductForm /> : <Navigate to="/" />}
           />
-          <Route
-            path="/add-customer"
-            element={isAdmin ? <AddCustomerForm /> : <Navigate to="/" />}
-          />
+          
           <Route
             path="/billing"
             element={<Billing products={products} setProducts={setProducts} customers={customers} />}
           />
           <Route path="/customers" element={<Customers customers={customers} />} />
           <Route path="*" element={<Navigate to="/" />} />
+          <Route
+  path="/staff"
+  element={isAdmin ? <StaffManagement /> : <Navigate to="/" />}
+/>
+
+ <Route
+          path="/customers"
+          element={isAdmin ? <Customers /> : <Navigate to="/" />}
+        />
+       <Route
+          path="/suppliers"
+          element={isAdmin ? <SuppliersManagement /> : <Navigate to="/" replace />}
+        />
+
+
+
         </Routes>
       </div>
     </Router>

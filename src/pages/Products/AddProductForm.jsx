@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { onClose } from "react"; // your modal close handler
+import React, { useState, useEffect } from "react";
 import { db, storage } from "../firebase";
 import {
   collection,
   addDoc,
+  getDocs,
   serverTimestamp,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -25,6 +25,22 @@ const AddProductForm = ({ onClose }) => {
 
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [suppliersList, setSuppliersList] = useState([]);
+
+  // Fetch suppliers from Firestore
+  const fetchSuppliers = async () => {
+    try {
+      const querySnap = await getDocs(collection(db, "suppliers"));
+      const list = querySnap.docs.map((doc) => ({ id: doc.id, name: doc.data().name }));
+      setSuppliersList(list);
+    } catch (error) {
+      console.error("Error fetching suppliers:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSuppliers();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -85,40 +101,93 @@ const AddProductForm = ({ onClose }) => {
 
       <form onSubmit={handleSubmit} className="form">
         <div className="form-row">
-          <input  className="dark-input" type="text" name="name" placeholder="Product Name" onChange={handleChange} required />
-          <input className="dark-input"  type="text" name="sku" placeholder="SKU" onChange={handleChange} required />
+          <input
+            className="dark-input"
+            type="text"
+            name="name"
+            placeholder="Product Name"
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="dark-input"
+            type="text"
+            name="sku"
+            placeholder="SKU"
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="form-row">
-          <select className="dark-input"  name="category" onChange={handleChange} required>
+          <select
+            className="dark-input"
+            name="category"
+            onChange={handleChange}
+            required
+          >
             <option value="">Select Category</option>
             <option value="Electronics">Electronics</option>
             <option value="Grocery">Grocery</option>
             <option value="Clothing">Clothing</option>
             <option value="Stationery">Stationery</option>
           </select>
-          <select className="dark-input"  name="supplier" onChange={handleChange}>
+
+          <select
+            className="dark-input"
+            name="supplier"
+            onChange={handleChange}
+          >
             <option value="">Select Supplier</option>
-            <option value="Supplier A">Supplier A</option>
-            <option value="Supplier B">Supplier B</option>
-            <option value="Supplier C">Supplier C</option>
+            {suppliersList.map((s) => (
+              <option key={s.id} value={s.name}>{s.name}</option>
+            ))}
           </select>
         </div>
 
         <div className="form-row">
-          <input className="dark-input"  type="number" name="quantity" placeholder="Quantity" onChange={handleChange} required />
-          <input className="dark-input"  type="number" name="price" placeholder="Price per Unit" onChange={handleChange} required />
+          <input
+            className="dark-input"
+            type="number"
+            name="quantity"
+            placeholder="Quantity"
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="dark-input"
+            type="number"
+            name="price"
+            placeholder="Price per Unit"
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="form-row">
-          <input className="dark-input"  type="number" name="reorderLevel" placeholder="Reorder Level" onChange={handleChange} />
-          <input className="dark-input"  type="date" name="expiryDate" onChange={handleChange} />
+          <input
+            className="dark-input"
+            type="number"
+            name="reorderLevel"
+            placeholder="Reorder Level"
+            onChange={handleChange}
+          />
+          <input
+            className="dark-input"
+            type="date"
+            name="expiryDate"
+            onChange={handleChange}
+          />
         </div>
 
-        <textarea name="description" placeholder="Product Description" onChange={handleChange} rows={3} />
+        <textarea
+          name="description"
+          placeholder="Product Description"
+          onChange={handleChange}
+          rows={3}
+        />
 
-        <input className="dark-input"  type="file" name="image" accept="image/*" onChange={handleChange} />
-
+        {/* Image preview */}
         {imagePreview && <img src={imagePreview} alt="Preview" className="image-preview" />}
 
         <button type="submit" disabled={loading}>

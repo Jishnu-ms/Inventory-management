@@ -32,7 +32,11 @@ h2 {
   transition: all 0.3s ease;
 }
 
-
+.search-bar:focus {
+  outline: none;
+  border-color: #00d084;
+  box-shadow: 0 0 5px #00d084;
+}
 
 /* Product Card */
 .product-card {
@@ -48,7 +52,6 @@ h2 {
 
 .product-card:hover {
   transform: translateY(-3px);
-
 }
 
 /* Product Image */
@@ -101,24 +104,34 @@ h2 {
 .product-actions button {
   padding: 0.5rem 1rem;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
 
-.product-actions button:hover {
-  transform: translateY(-2px);
- 
+/* Edit button - solid blue */
+.product-actions button:nth-child(1) {
+  background-color: #007bff;
+  color: #fff;
 }
 
+.product-actions button:nth-child(1):hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+/* Delete button - solid red */
 .delete-btn {
-  background: #e74c3c;
+  background-color: #dc3545;
   color: #fff;
 }
 
 .delete-btn:hover {
-  background: #c0392b;
+  background-color: #a71d2a;
+  transform: translateY(-1px);
 }
 
 /* Responsive */
