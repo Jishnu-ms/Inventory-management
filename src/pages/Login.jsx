@@ -1,7 +1,8 @@
+// src/pages/Login.jsx
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import "./Login.css"; // ✅ Import the CSS
+import "./Login.css";
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
@@ -21,7 +22,7 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-page">
       <h2>Login</h2>
       <form onSubmit={handleLogin} className="login-form">
         <input
@@ -39,7 +40,7 @@ const Login = ({ onLogin }) => {
           required
         />
         <button type="submit">Login</button>
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="login-error">{error}</p>}
       </form>
     </div>
   );

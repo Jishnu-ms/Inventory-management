@@ -1,30 +1,50 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './Navbar.css'; // optional for styling
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import './Navbar.css';
 
 const Navbar = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const handleLinkClick = () => {
+    if (menuOpen) setMenuOpen(false);
+  };
+
   return (
     <nav className="navbar">
-      <h1 style={{ color: 'var(--primary-color)' }}>🧾 InventoBill</h1>
-      <ul className="nav-links">
-        <li><Link to="/" style={linkStyle}>Dashboard</Link></li>
-        <li><Link to="/products" style={linkStyle}>Products</Link></li>
-        <li><Link to="/add-product" style={linkStyle}>Add Product</Link></li>
-        <li><Link to="/billing" style={linkStyle}>Billing</Link></li>
-        <li><Link to="/customers" style={linkStyle}>Customers</Link></li>
-        <li> <Link to="/staff" style={linkStyle}>Staff</Link></li>
-        <li>
-        <Link to="/suppliers" style={linkStyle}>Suppliers</Link>
-      </li>
+      <h1>🧾 InventoBill</h1>
+
+      <div className={`nav-toggle ${menuOpen ? 'active' : ''}`} onClick={toggleMenu}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <ul className={`nav-links ${menuOpen ? 'active' : ''}`}>
+        {[
+          { path: '/', label: 'Dashboard' },
+          { path: '/products', label: 'Products' },
+          { path: '/add-product', label: 'Add Product' },
+          { path: '/billing', label: 'Billing' },
+          { path: '/customers', label: 'Customers' },
+          { path: '/staff', label: 'Staff' },
+          { path: '/suppliers', label: 'Suppliers' },
+        ].map((link) => (
+          <li key={link.path}>
+            <Link
+              to={link.path}
+              onClick={handleLinkClick}
+              className={location.pathname === link.path ? 'active' : ''}
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );
-};
-
-const linkStyle = {
-  color: 'var(--text-color)',
-  textDecoration: 'none',
-  fontWeight: '500',
 };
 
 export default Navbar;

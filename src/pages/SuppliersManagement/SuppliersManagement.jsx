@@ -6,6 +6,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
+  updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
 import "./SuppliersManagement.css";
@@ -15,6 +16,7 @@ const SuppliersManagement = () => {
   const [selectedSupplier, setSelectedSupplier] = useState(null);
   const [supplies, setSupplies] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [editingSupplierId, setEditingSupplierId] = useState(null);
 
   const [newSupplier, setNewSupplier] = useState({
     name: "",
@@ -51,21 +53,45 @@ const SuppliersManagement = () => {
     fetchSuppliers();
   }, []);
 
-  // Add supplier
-  const handleAddSupplier = async (e) => {
+  // Add or Update supplier
+  const handleAddOrUpdateSupplier = async (e) => {
     e.preventDefault();
     if (!newSupplier.name) {
       alert("Supplier name is required!");
       return;
     }
+
     try {
-      await addDoc(collection(db, "suppliers"), { ...newSupplier, createdAt: serverTimestamp() });
-      alert("Supplier added!");
+      if (editingSupplierId) {
+        // Update existing supplier
+        await updateDoc(doc(db, "suppliers", editingSupplierId), newSupplier);
+        alert("Supplier updated!");
+      } else {
+        // Add new supplier
+        await addDoc(collection(db, "suppliers"), { ...newSupplier, createdAt: serverTimestamp() });
+        alert("Supplier added!");
+      }
+
       setNewSupplier({ name: "", contact: "", phone: "", email: "", address: "", notes: "" });
+      setEditingSupplierId(null);
       fetchSuppliers();
     } catch (error) {
-      console.error("Error adding supplier:", error);
+      console.error("Error adding/updating supplier:", error);
     }
+  };
+
+  // Edit supplier
+  const handleEditSupplier = (supplier) => {
+    setNewSupplier({
+      name: supplier.name,
+      contact: supplier.contact || "",
+      phone: supplier.phone || "",
+      email: supplier.email || "",
+      address: supplier.address || "",
+      notes: supplier.notes || "",
+    });
+    setEditingSupplierId(supplier.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Delete supplier
@@ -137,8 +163,8 @@ const SuppliersManagement = () => {
     <div className="supplier-container">
       <h2>🏭 Suppliers / Vendors</h2>
 
-      {/* Add Supplier Form */}
-      <form className="supplier-form" onSubmit={handleAddSupplier}>
+      {/* Add / Edit Supplier Form */}
+      <form className="supplier-form" onSubmit={handleAddOrUpdateSupplier}>
         <div className="form-row">
           <input
             type="text"
@@ -178,7 +204,19 @@ const SuppliersManagement = () => {
           value={newSupplier.notes}
           onChange={(e) => setNewSupplier({ ...newSupplier, notes: e.target.value })}
         />
-        <button type="submit">Add Supplier</button>
+        <button type="submit">{editingSupplierId ? "Update Supplier" : "Add Supplier"}</button>
+        {editingSupplierId && (
+          <button
+            type="button"
+            className="btn-cancel"
+            onClick={() => {
+              setNewSupplier({ name: "", contact: "", phone: "", email: "", address: "", notes: "" });
+              setEditingSupplierId(null);
+            }}
+          >
+            Cancel Edit
+          </button>
+        )}
       </form>
 
       {/* Search */}
@@ -223,6 +261,9 @@ const SuppliersManagement = () => {
                     </button>
                   </td>
                   <td>
+                    <button className="btn-edit" onClick={() => handleEditSupplier(s)}>
+                      Edit
+                    </button>
                     <button className="btn-delete" onClick={() => handleDeleteSupplier(s.id)}>
                       Delete
                     </button>
@@ -269,11 +310,9 @@ const SuppliersManagement = () => {
                     ))}
                   </tbody>
                 </table>
-                 <br></br>
+                <br />
               </div>
-              
             )}
-           
 
             {/* Add Supply Form */}
             <form onSubmit={handleAddSupply}>

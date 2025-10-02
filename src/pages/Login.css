@@ -1,37 +1,42 @@
-/* src/pages/Login.css */
+/* ===========================
+   Login Page Styles
+=========================== */
 
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #1a1a1a;
-  color: #fff;
-}
-
-.login-container {
+/* Container */
+.login-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  padding: 10px;
+  background-color: #1a1a1a;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
 }
 
-.login-container h2 {
-  margin-bottom: 20px;
+/* Heading */
+.login-page h2 {
+  margin: 20px 0;
   color: #00d4ff;
   font-size: 2rem;
+  text-align: center;
 }
 
+/* Form */
 .login-form {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 100%;
+  max-width: 320px;
   gap: 15px;
   background-color: #2a2a2a;
   padding: 30px;
   border-radius: 10px;
-  
+  box-sizing: border-box;
 }
 
+/* Input Fields */
 .login-form input {
   padding: 10px;
   border-radius: 5px;
@@ -40,12 +45,20 @@ body {
   font-size: 1rem;
   background-color: #1e1e1e;
   color: #fff;
+  transition: border 0.2s, box-shadow 0.2s;
 }
 
 .login-form input::placeholder {
   color: #bbb;
 }
 
+.login-form input:focus {
+  outline: none;
+  border: 1px solid #00d4ff;
+  box-shadow: 0 0 5px #00d4ff;
+}
+
+/* Submit Button */
 .login-form button {
   padding: 10px;
   border-radius: 5px;
@@ -54,16 +67,43 @@ body {
   color: #000;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .login-form button:hover {
   background-color: #00a5c4;
+  transform: translateY(-2px);
 }
 
-.error-message {
+.login-form button:active {
+  transform: translateY(1px);
+}
+
+/* Error Message */
+.login-error {
   color: #ff4d4f;
   font-weight: bold;
   text-align: center;
   margin-top: 10px;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+@media (max-width: 480px) {
+  .login-form {
+    padding: 20px;
+    gap: 12px;
+  }
+
+  .login-form input,
+  .login-form button {
+    font-size: 0.95rem;
+    padding: 8px;
+  }
+
+  .login-page h2 {
+    font-size: 1.5rem;
+    margin: 15px 0;
+  }
 }

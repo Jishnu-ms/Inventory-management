@@ -176,6 +176,20 @@
   justify-content: flex-end;
   margin-top: 1rem;
 }
+/* Make edit button same size as delete */
+/* Only buttons inside supplier-container */
+.supplier-container .btn-edit {
+    width: 70px;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  background: rgb(0, 128, 255);
+  color: #fff;
+}
+
 
 /* Responsive */
 @media (max-width: 700px) {
