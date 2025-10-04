@@ -20,6 +20,13 @@ const Billing = () => {
   const [billId] = useState(() => 'INV' + Date.now());
   const [billDate] = useState(() => new Date().toLocaleString());
 
+  // Helper to get stock status
+  const getStockStatus = (qty) => {
+    if (qty > 5) return 'in-stock';
+    if (qty > 0) return 'low-stock';
+    return 'out-of-stock';
+  };
+
   // Fetch products
   const fetchProducts = async () => {
     try {
@@ -218,11 +225,11 @@ const Billing = () => {
 
   return (
     <div className="billing-container">
-      <h2>🧾 Billing</h2>
+      <h2 className='dashboard-title '>🧾 Billing</h2>
 
       {successMessage && <p className="success-msg">{successMessage}</p>}
 
-      {/* Edit Popup (on top) */}
+      {/* Edit Popup */}
       {showEditPopup && (
         <div className="edit-popup">
           <div className="edit-popup-content">
@@ -273,24 +280,45 @@ const Billing = () => {
           onChange={e => setSearchQuery(e.target.value)}
           className="search-input"
         />
-        <div className="products-container">
-          {products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase())).map(product => (
-            <div key={product.id} className="product-row">
-              <div className="product-info">
-                <h3>{product.name}</h3>
-                <p>Category: {product.category || 'N/A'}</p>
-                <p>Qty: {product.quantity}</p>
-                <p>Price: ₹{product.price}</p>
+
+        <div className="billing-products-grid">
+          {products
+            .filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+            .map(product => (
+              <div key={product.id} className="billing-item">
+                <div className="billing-header">
+                  <div className="product-icon">📦</div>
+                  <br></br>
+                  
+                  <div className={`status-badge ${getStockStatus(product.quantity)}`}></div>
+                </div>
+                <br></br>
+
+                <div className="billing-content">
+                  <h4 className="product-name">{product.name}</h4>
+                  <div className="product-details">
+                    <span className="product-qty">Qty: {product.quantity || 0}</span>
+                    <span className="product-price">₹{Number(product.price || 0).toLocaleString()}</span>
+                  </div>
+                  <div className="product-category">{product.category || "Uncategorized"}</div>
+                  <div className="extra-details">
+                    <p><strong>Supplier:</strong> {product.supplier || "N/A"}</p>
+                    <p><strong>SKU:</strong> {product.sku || "N/A"}</p>
+                    <p><strong>Expiry:</strong> {product.expiryDate || "N/A"}</p>
+                  </div>
+                </div>
+
+                <div className="product-actions">
+                  <button
+                    className="add-to-bill-btn"
+                    disabled={product.quantity <= 0}
+                    onClick={() => addToBill(product.id)}
+                  >
+                    {product.quantity > 0 ? 'Add to Bill' : 'Out of Stock'}
+                  </button>
+                </div>
               </div>
-              <button
-                className="btn-add"
-                disabled={product.quantity <= 0}
-                onClick={() => addToBill(product.id)}
-              >
-                {product.quantity > 0 ? 'Add to Bill' : 'Out of Stock'}
-              </button>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
@@ -335,6 +363,8 @@ const Billing = () => {
           </table>
 
           <button className="print-btn no-print" onClick={handlePrint}>🖨️ Print & Save Bill</button>
+       
+
         </div>
       )}
 

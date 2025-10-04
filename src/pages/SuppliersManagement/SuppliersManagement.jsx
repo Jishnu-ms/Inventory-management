@@ -161,7 +161,7 @@ const SuppliersManagement = () => {
 
   return (
     <div className="supplier-container">
-      <h2>🏭 Suppliers / Vendors</h2>
+      <h2 className="dashboard-title">🏭 Suppliers / Vendors</h2>
 
       {/* Add / Edit Supplier Form */}
       <form className="supplier-form" onSubmit={handleAddOrUpdateSupplier}>

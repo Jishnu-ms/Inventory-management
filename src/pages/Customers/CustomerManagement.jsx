@@ -125,7 +125,7 @@ const Customers = () => {
 
   return (
     <div className="container">
-      <h2>👤 Customer Management</h2>
+      <h2 className="dashboard-title">👤 Customer Management</h2>
 
       {/* Add Customer Form */}
       <form className="form" onSubmit={handleSubmit}>

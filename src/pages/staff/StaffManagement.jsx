@@ -100,7 +100,7 @@ const StaffManagement = () => {
 
   return (
     <div className="staff-container">
-      <h2>👥 Staff Management</h2>
+      <h2 className="dashboard-title">👥 Staff Management</h2>
 
       {/* Add Staff Form */}
       <form onSubmit={handleAddStaff} className="staff-form">

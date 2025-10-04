@@ -1,5 +1,6 @@
+/* ===== Billing Container ===== */
 .billing-container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
   background: #1e1e2f;
@@ -36,54 +37,125 @@
   color: #fff;
 }
 
-.products-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 3rem;
+/* ===== Products Grid ===== */
+.billing-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
-.product-row {
+/* ===== Product Card ===== */
+.billing-item {
+  border: 2px solid #00b36e;
+  
+  border: #00b36e;
+ width: 85%;
+  background: #2c2c3e;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: all 0.3s ease;
+}
+
+.billing-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+}
+
+/* ===== Product Image ===== */
+.billing-product-image-wrapper {
+  width: 100%;
+  max-height: 150px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 0.75rem;
+}
+
+.billing-product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.billing-product-image.placeholder {
+  background: #333;
+}
+
+/* ===== Stock Badge ===== */
+
+
+.status-badge{
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.status-badge.in-stock{
+  background: #28a745;
+}
+.status-badge.low-stock {
+  background: #ffc107;
+}
+.status-badge.out-of-stock  {
+  
+  background: #dc3545;
+}
+/* ===== Product Info ===== */
+.billing-product-info {
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.billing-product-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f9fafb;
+  margin-bottom: 0.5rem;
+}
+
+.billing-product-details {
+  width: 100%;
+  text-align: left;
+}
+
+.billing-detail-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  background: #2a2a3c;
-  padding: 1rem 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-  transition: transform 0.2s ease-in-out;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin-bottom: 0.25rem;
 }
 
-.product-row:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-}
+.billing-detail-label { font-weight: 600; }
+.billing-detail-value { font-weight: 500; }
 
-.product-info h3 {
-  margin: 0;
-  font-size: 1.3rem;
-}
-
-.product-info p {
-  margin: 0.2rem 0;
-  font-size: 1rem;
-}
-
-.btn-add {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  background: #00d084;
-  color: #1e1e2f;
-  font-weight: bold;
+/* ===== Add to Bill Button ===== */
+.add-to-bill-btn {
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 1rem;
+  border: none;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  color: #fff;
+  transition: all 0.25s ease;
 }
 
-.btn-add:hover:not(:disabled) { background: #00b36e; }
-.btn-add:disabled { background: #555; cursor: not-allowed; }
+.add-to-bill-btn:hover:not(:disabled) {
+  background: linear-gradient(90deg, #b783d1, #e0e2e8);
+}
 
-/* Table */
+.add-to-bill-btn:disabled {
+  background: #d8dce4; /* grey background */
+  color: #d1d5db;      /* light grey text */
+  cursor: not-allowed;
+}
+
+
+/* ===== Billing Table ===== */
 .bill-table {
   width: 100%;
   border-collapse: collapse;
@@ -100,6 +172,7 @@
 .bill-table th { background: #33334d; }
 .bill-table tfoot td { background: #33334d; }
 
+/* ===== Buttons ===== */
 .btn-remove {
   padding: 0.4rem 0.8rem;
   border: none;
@@ -135,7 +208,7 @@
 }
 .print-btn:hover, .btn-load:hover { background: #00b36e; }
 
-/* Edit Popup */
+/* ===== Edit Popup ===== */
 .edit-popup {
   position: fixed;
   top: 0;
@@ -157,7 +230,6 @@
 }
 
 .edit-item-row {
-  
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
@@ -180,7 +252,6 @@
   margin-top: 10px;
 }
 
-
 .btn-update, .btn-cancel {
   flex: 1;
   padding: 0.6rem 1rem;
@@ -190,195 +261,111 @@
   cursor: pointer;
 }
 
-
-
 .btn-update { background: #00d084; color: #1e1e2f; }
 .btn-update:hover { background: #00b36e; }
 
 .btn-cancel { background: #e74c3c; color: #fff; }
 .btn-cancel:hover { background: #c0392b; }
 
-.sep{ height: 10px; }
+/* ===== Print & Responsive ===== */
+.sep { height: 10px; }
 
-/* Hide elements when printing */
-@media print { .no-print { display: none; } }
+/* ===== Print Styles ===== */
+/* ===== Print Styles ===== */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+    font-family: 'Arial', 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
 
-/* Responsive */
-@media (max-width: 700px) {
+  .no-print { display: none !important; }
 
-
-
-}
-
-/* Mobile */
-@media (max-width: 768px) {
- 
   .billing-container {
-    width: 80%;
+    width: 600px;       /* Constrain width like a real invoice */
+    margin: 2rem auto;  /* Center the bill */
+    padding: 2rem;
+    background: #fff;
+    color: #000;
+    box-shadow: none;
   }
 
-     .table-wrapper {
-    overflow-x: auto; /* enable scroll only on mobile */
+  h2, h3 {
+    color: #000 !important;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-family: 'Georgia', serif; /* professional invoice font */
+    letter-spacing: 1px;
+    font-size: larger;
   }
 
-  .table {
-    min-width: 700px; /* keeps layout intact, forces scroll */
+  .bill-header {
+    text-align: left;
+    margin-bottom: 1rem;
+  }
+
+  .bill-header p {
+    margin: 0.2rem 0;
+    font-size: 0.95rem;
+  }
+
+  .bill-table, .bill-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .bill-table th, .bill-table td,
+  .bill-items-table th, .bill-items-table td {
+    border: 1px solid #333;
+    padding: 0.5rem 0.8rem;
+    text-align: center;
+  }
+
+  .bill-table th, .bill-items-table th {
+    background: #f3f4f6;
+    font-weight: 700;
+    font-family: 'Georgia', serif;
+  }
+
+  .bill-table tfoot td {
+    font-weight: 700;
+    background: #f3f4f6;
+  }
+
+  .bill-items-table td {
+    font-size: 0.85rem;
+  }
+
+  .bill-section {
+    page-break-inside: avoid;
+  }
+
+ 
+
+  /* Optional: horizontal rule for separation */
+  hr {
+    border: 0;
+    border-top: 1px dashed #ccc;
+    margin: 1rem 0;
   }
 }
 
-/* Extra Small Screens */
-@media (max-width: 400px) {
-  .supplier-container {
-    padding: 1rem;
-  }
 
-  .supplier-container h2 {
-    font-size: 1.3rem;
-  }
 
-  .supplier-form button {
-    font-size: 1rem;
-    padding: 0.75rem;
-  }
-
-  .popup-buttons {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-
-/* ===== Products Grid Container ===== */
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  justify-items: center;
-  margin: 0 auto;
-  max-width: 1320px; /* max 3 cards */
-}
-
-/* Strict 3 columns on large screens */
-@media (min-width: 1320px) {
-  .products-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* 2 columns medium screens */
-@media (max-width: 1024px) {
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* 1 column small screens */
 @media (max-width: 768px) {
-  .products-grid {
-    grid-template-columns: 1fr;
-  }
+  .billing-container { width: 80%; }
+  .table-wrapper { overflow-x: auto; }
+  .bill-table { min-width: 700px; }
+  .billing-products-grid { grid-template-columns: 1fr; }
 }
 
-/* ===== Product Card ===== */
-.product-card {
-  background: #1f2937;
-  border-radius: 16px;
-  padding: 1rem 1.25rem;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-}
-
-/* ===== Product Image ===== */
-.product-image-container {
-  width: 100%;
-  max-height: 180px;
-  overflow: hidden;
-  border-radius: 12px;
-  margin-bottom: 0.75rem;
-}
-
-.product-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* ===== Status Badge ===== */
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-top: -1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.in-stock { background: rgba(34,197,94,0.15); color: #22c55e; }
-.low-stock { background: rgba(250,204,21,0.15); color: #facc15; }
-.out-of-stock { background: rgba(239,68,68,0.15); color: #ef4444; }
-
-/* ===== Product Content ===== */
-.product-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #f9fafb;
-  margin-bottom: 0.5rem;
-}
-
-.product-details {
-  width: 100%;
-  text-align: left;
-  margin-bottom: 0.75rem;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.875rem;
-  color: #9ca3af;
-  margin-bottom: 0.25rem;
-}
-
-.detail-label { font-weight: 600; }
-.detail-value { font-weight: 500; }
-
-/* ===== Product Description ===== */
-.product-description p {
-  font-size: 0.875rem;
-  color: #d1d5db;
-  margin-top: 0.5rem;
-}
-
-/* ===== Add to Bill Button ===== */
-.btn-add {
-  margin-top: 1rem;
-  padding: 0.6rem 1rem;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  background: linear-gradient(90deg,#667eea,#764ba2);
-  color: #fff;
-  transition: all 0.25s ease;
-}
-
-.btn-add:hover:not(:disabled) {
-  background: linear-gradient(90deg,#764ba2,#667eea);
-}
-
-.btn-add:disabled {
-  background: #374151;
-  color: #9ca3af;
-  cursor: not-allowed;
+@media (max-width: 400px) {
+  .supplier-container { padding: 1rem; }
+  .supplier-container h2 { font-size: 1.3rem; }
+  .supplier-form button { font-size: 1rem; padding: 0.75rem; }
+  .popup-buttons { flex-direction: column; gap: 0.5rem; }
 }

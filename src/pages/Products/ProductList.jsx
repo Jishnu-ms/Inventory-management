@@ -51,7 +51,7 @@ const ProductList = () => {
 
   return (
     <div className="container2">
-      <h2>📦 Product List</h2>
+      <h2 className='dashboard-title'>📦 Product List</h2>
 
       <input
         type="text"

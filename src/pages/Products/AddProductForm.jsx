@@ -92,7 +92,7 @@ const AddProductForm = ({ onClose }) => {
   return (
     <div className="container">
       <div className="form-header">
-        <h2>➕ Add New Product</h2>
+        <h2 className="dashboard-title">➕ Add New Product</h2>
         <button className="close-btn" onClick={onClose}></button>
       </div>
 
