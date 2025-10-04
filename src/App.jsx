@@ -7,7 +7,6 @@ import AddProductForm from './pages/Products/AddProductForm';
 import Billing from './pages/bill/Billing';
 import EditProductForm from './pages/Products/EditProductForm';
 
-
 import Login from './pages/Login';
 import StaffManagement from './pages/staff/StaffManagement';
 import Customers from './pages/Customers/CustomerManagement';
@@ -17,6 +16,9 @@ import SuppliersManagement from './pages/SuppliersManagement/SuppliersManagement
 import { collection, getDocs } from "firebase/firestore";
 import { db, auth } from "./firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+
+// Import professional styles
+
 
 // ✅ Admin UID
 const ADMIN_UID = "nByRorkQuHOUNcySWbSR7nDnzXY2";
@@ -61,6 +63,7 @@ const App = () => {
   const addProduct = (newProduct) => setProducts([...products, newProduct]);
   const deleteProduct = (indexToDelete) =>
     setProducts(products.filter((_, index) => index !== indexToDelete));
+  // eslint-disable-next-line no-unused-vars
   const updateProduct = (updatedProducts) => setProducts(updatedProducts);
 
   const handleLogout = async () => {
@@ -78,46 +81,47 @@ const App = () => {
 
   return (
     <Router>
-      <Navbar user={user} isAdmin={isAdmin} onLogout={handleLogout} />
-      <div className="p-6">
-        <Routes>
-          <Route path="/" element={<Dashboard products={products} />} />
-          <Route
-            path="/products"
-            element={<ProductList products={products} deleteProduct={deleteProduct} />}
-          />
-          <Route
-            path="/add-product"
-            element={isAdmin ? <AddProductForm addProduct={addProduct} /> : <Navigate to="/" />}
-          />
-          <Route
-            path="/edit-product/:id"
-            element={isAdmin ? <EditProductForm /> : <Navigate to="/" />}
-          />
-          
-          <Route
-            path="/billing"
-            element={<Billing products={products} setProducts={setProducts} customers={customers} />}
-          />
-          <Route path="/customers" element={<Customers customers={customers} />} />
-          <Route path="*" element={<Navigate to="/" />} />
-          <Route
-  path="/staff"
-  element={isAdmin ? <StaffManagement /> : <Navigate to="/" />}
-/>
+      <div className="app-container">
+        <Navbar user={user} isAdmin={isAdmin} onLogout={handleLogout} />
+        <main className="main-content">
+          <div className="content-wrapper">
+            <Routes>
+              <Route path="/" element={<Dashboard products={products} />} />
+              <Route
+                path="/products"
+                element={<ProductList products={products} deleteProduct={deleteProduct} />}
+              />
+              <Route
+                path="/add-product"
+                element={isAdmin ? <AddProductForm addProduct={addProduct} /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/edit-product/:id"
+                element={isAdmin ? <EditProductForm /> : <Navigate to="/" />}
+              />
+              
+              <Route
+                path="/billing"
+                element={<Billing products={products} setProducts={setProducts} customers={customers} />}
+              />
+              <Route path="/customers" element={<Customers customers={customers} />} />
+              <Route path="*" element={<Navigate to="/" />} />
+              <Route
+                path="/staff"
+                element={isAdmin ? <StaffManagement /> : <Navigate to="/" />}
+              />
 
- <Route
-          path="/customers"
-          element={isAdmin ? <Customers /> : <Navigate to="/" />}
-        />
-       <Route
-          path="/suppliers"
-          element={isAdmin ? <SuppliersManagement /> : <Navigate to="/" replace />}
-        />
-
-
-
-        </Routes>
+              <Route
+                path="/customers"
+                element={isAdmin ? <Customers /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/suppliers"
+                element={isAdmin ? <SuppliersManagement /> : <Navigate to="/" replace />}
+              />
+            </Routes>
+          </div>
+        </main>
       </div>
     </Router>
   );

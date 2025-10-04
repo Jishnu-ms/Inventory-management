@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { signOut } from "firebase/auth";
@@ -7,7 +7,7 @@ import "./Dashboard.css";
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
@@ -35,134 +35,254 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      window.location.reload(); // simple way to return to login page
+      window.location.reload();
     } catch (err) {
       console.error("Logout failed:", err);
     }
   };
 
-  if (loading)
-    return <p style={{ color: "#fff", textAlign: "center" }}>Loading dashboard...</p>;
+  // Calculate analytics data
+  const analytics = useMemo(() => {
+    if (!products.length) return {
+      totalProducts: 0,
+      totalStock: 0,
+      totalValue: 0,
+      lowStockItems: [],
+      outOfStockItems: [],
+      categoryCounts: {},
+      avgPrice: 0
+    };
+    
+    const totalProducts = products.length;
+    const totalStock = products.reduce((sum, p) => sum + Number(p.quantity || 0), 0);
+    const totalValue = products.reduce(
+      (sum, p) => sum + (Number(p.quantity || 0) * Number(p.price || 0)),
+      0
+    );
+    
+    const lowStockItems = products.filter(
+      (p) => Number(p.quantity || 0) <= Number(p.reorderLevel || 5) && Number(p.quantity || 0) > 0
+    );
+    const outOfStockItems = products.filter((p) => Number(p.quantity || 0) === 0);
+    
+    const categoryCounts = products.reduce((acc, p) => {
+      const category = p.category || 'Uncategorized';
+      acc[category] = (acc[category] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const avgPrice = totalStock > 0 ? totalValue / totalStock : 0;
+    
+    return {
+      totalProducts,
+      totalStock,
+      totalValue,
+      lowStockItems,
+      outOfStockItems,
+      categoryCounts,
+      avgPrice
+    };
+  }, [products]);
 
-  const totalProducts = products.length;
-  const totalStock = products.reduce((sum, p) => sum + Number(p.quantity), 0);
-  const totalValue = products.reduce(
-    (sum, p) => sum + Number(p.quantity) * Number(p.price),
-    0
-  );
+  if (loading) {
+    return (
+      <div className="dashboard-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading Dashboard...</p>
+      </div>
+    );
+  }
 
-  const lowStockItemsList = products.filter(
-    (p) => Number(p.quantity) <= Number(p.reorderLevel) && Number(p.quantity) > 0
-  );
-  const outOfStockItemsList = products.filter((p) => Number(p.quantity) === 0);
-
-  const categoryCounts = products.reduce((acc, p) => {
-    acc[p.category] = (acc[p.category] || 0) + 1;
-    return acc;
-  }, {});
-
-  // Open modal
   const openModal = (title, items) => {
     setModalTitle(title);
     setModalItems(items);
     setModalOpen(true);
   };
 
-  const closeModal = () => setModalOpen(false);
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalTitle("");
+    setModalItems([]);
+  };
 
   return (
     <div className="dashboard-container">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2>📊 Inventory Dashboard</h2>
-        <button
-          onClick={handleLogout}
-          style={{ padding: "8px 16px", cursor: "pointer", background: "#ff4d4f", color: "#fff", border: "none", borderRadius: "4px" }}
-        >
-          Logout
+      {/* Dashboard Header */}
+      <div className="dashboard-header">
+        <div className="header-content">
+          <h1 className="dashboard-title">📊 Dashboard Overview</h1>
+          <p className="dashboard-subtitle">Monitor your inventory performance and key metrics</p>
+        </div>
+        <button onClick={handleLogout} className="logout-btn">
+          🚪 Logout
         </button>
       </div>
 
-      <div className="dashboard-grid">
-        <div className="dashboard-card">
-          <h3>Total Products</h3>
-          <p>{totalProducts}</p>
-        </div>
-
-        <div className="dashboard-card">
-          <h3>Total Stock</h3>
-          <p>{totalStock}</p>
-        </div>
-
-        <div className="dashboard-card">
-          <h3>Total Inventory Value</h3>
-          <p>₹{totalValue.toLocaleString()}</p>
-        </div>
-
-        <div
-          className="dashboard-card warning"
-          onClick={() => openModal("Low Stock Items", lowStockItemsList)}
-          style={{ cursor: "pointer" }}
-        >
-          <h3>Low Stock Items</h3>
-          <p>{lowStockItemsList.length}</p>
-        </div>
-
-        <div
-          className="dashboard-card danger"
-          onClick={() => openModal("Out of Stock Items", outOfStockItemsList)}
-          style={{ cursor: "pointer" }}
-        >
-          <h3>Out of Stock Items</h3>
-          <p>{outOfStockItemsList.length}</p>
+      {/* Key Metrics Grid */}
+      <div className="metrics-section">
+        <h2 className="section-title">📈 Key Metrics</h2>
+        <div className="metrics-grid">
+          <div className="metric-card primary">
+            <div className="metric-icon">📦</div>
+            <div className="metric-content">
+              <div className="metric-value">{analytics.totalProducts.toLocaleString()}</div>
+              <div className="metric-label">Total Products</div>
+            </div>
+          </div>
+          
+          <div className="metric-card success">
+            <div className="metric-icon">📊</div>
+            <div className="metric-content">
+              <div className="metric-value">{analytics.totalStock.toLocaleString()}</div>
+              <div className="metric-label">Total Stock</div>
+            </div>
+          </div>
+          
+          <div className="metric-card info">
+            <div className="metric-icon">💰</div>
+            <div className="metric-content">
+              <div className="metric-value">₹{analytics.totalValue.toLocaleString()}</div>
+              <div className="metric-label">Inventory Value</div>
+            </div>
+          </div>
+          
+          <div className="metric-card secondary">
+            <div className="metric-icon">💵</div>
+            <div className="metric-content">
+              <div className="metric-value">₹{Math.round(analytics.avgPrice).toLocaleString()}</div>
+              <div className="metric-label">Average Price</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="category-section">
-        <h3>Products by Category</h3>
-        <div className="category-grid">
-          {Object.keys(categoryCounts).map((cat, i) => {
-            const itemsInCategory = products.filter((p) => p.category === cat);
+      {/* Alerts Section */}
+      <div className="alerts-section">
+        <h2 className="section-title">⚠️ Inventory Alerts</h2>
+        <div className="alerts-grid">
+          <div 
+            className="alert-card warning clickable"
+            onClick={() => openModal("Low Stock Items", analytics.lowStockItems)}
+          >
+            <div className="alert-icon">⚠️</div>
+            <div className="alert-content">
+              <div className="alert-number">{analytics.lowStockItems.length}</div>
+              <div className="alert-text">Low Stock Items</div>
+            </div>
+          </div>
+          
+          <div 
+            className="alert-card danger clickable"
+            onClick={() => openModal("Out of Stock Items", analytics.outOfStockItems)}
+          >
+            <div className="alert-icon">🚫</div>
+            <div className="alert-content">
+              <div className="alert-number">{analytics.outOfStockItems.length}</div>
+              <div className="alert-text">Out of Stock</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Categories Section */}
+      <div className="categories-section">
+        <h2 className="section-title">🏷️ Product Categories</h2>
+        <div className="categories-grid">
+          {Object.entries(analytics.categoryCounts).map(([category, count]) => {
+            const categoryItems = products.filter(p => (p.category || 'Uncategorized') === category);
+            const categoryValue = categoryItems.reduce(
+              (sum, p) => sum + (Number(p.quantity || 0) * Number(p.price || 0)), 
+              0
+            );
+            
             return (
-              <div
-                key={i}
-                className="category-card"
-                onClick={() => openModal(`Category: ${cat}`, itemsInCategory)}
-                style={{ cursor: "pointer" }}
+              <div 
+                key={category}
+                className="category-card clickable"
+                onClick={() => openModal(`Category: ${category}`, categoryItems)}
               >
-                <h4>{cat}</h4>
-                <p>{categoryCounts[cat]} products</p>
+                <div className="category-header">
+                  <div className="category-icon">📋</div>
+                  <div className="category-count">{count}</div>
+                </div>
+                <div className="category-info">
+                  <h3 className="category-name">{category}</h3>
+                  <p className="category-value">₹{categoryValue.toLocaleString()}</p>
+                </div>
               </div>
             );
           })}
         </div>
       </div>
 
-      <div className="recent-products">
-        <h3>Recent Products Added</h3>
-        {products.slice(-5).reverse().map((p, idx) => (
-          <div key={idx} className="recent-card">
-            <p>
-              <strong>{p.name}</strong> | Qty: {p.quantity} | ₹{p.price}
-            </p>
-          </div>
-        ))}
+      {/* Recent Products Section */}
+      <div className="recent-section">
+        <h2 className="section-title">🆕 Recent Products</h2>
+        <div className="recent-grid">
+          {products.slice(-8).reverse().map((product) => {
+            const stockStatus = Number(product.quantity || 0) === 0 ? 'out' : 
+                               Number(product.quantity || 0) <= 5 ? 'low' : 'good';
+            
+            return (
+              <div key={product.id} className="recent2-item">
+                <div className="recent2-header">
+                  <div className="product2-icon">📦</div>
+                  <div className={`stock-indicator ${stockStatus}`}></div>
+                </div>
+                <div className="recent2-content">
+                  <h4 className="product2-name">{product.name}</h4>
+                  <div className="product2-details">
+                    <span className="product2-qty">Qty: {product.quantity || 0}</span>
+                    <span className="product2-price">₹{Number(product.price || 0).toLocaleString()}</span>
+                  </div>
+                  <div className="product2-category">{product.category || 'Uncategorized'}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Modal */}
+      {/* Enhanced Modal */}
       {modalOpen && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>{modalTitle}</h3>
-            <ul>
-              {modalItems.map((item) => (
-                <li key={item.id}>
-                  {item.name} | Qty: {item.quantity} | ₹{item.price}
-                </li>
-              ))}
-            </ul>
-            <button onClick={closeModal} className="close-modal-btn">
-              Close
-            </button>
+            <div className="modal-header">
+              <h3 className="modal-title">{modalTitle}</h3>
+              <button className="modal-close" onClick={closeModal}>×</button>
+            </div>
+            <div className="modal-body">
+              {modalItems.length === 0 ? (
+                <div className="empty-state">
+                  <p>No items found in this category.</p>
+                </div>
+              ) : (
+                <div className="modal-items">
+                  {modalItems.map((item) => (
+                    <div key={item.id} className="modal-item">
+                      <div className="item-info">
+                        <h4 className="item-name">{item.name}</h4>
+                        <div className="item-details">
+                          <span>Quantity: {item.quantity || 0}</span>
+                          <span>Price: ₹{Number(item.price || 0).toLocaleString()}</span>
+                          <span>Category: {item.category || 'N/A'}</span>
+                        </div>
+                      </div>
+                      <div className="item-value">
+                        ₹{((Number(item.quantity || 0) * Number(item.price || 0))).toLocaleString()}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <div className="modal-summary">
+                <span>Total Items: {modalItems.length}</span>
+                <span>Total Value: ₹{modalItems.reduce((sum, item) => sum + (Number(item.quantity || 0) * Number(item.price || 0)), 0).toLocaleString()}</span>
+              </div>
+              <button onClick={closeModal} className="modal-btn">Close</button>
+            </div>
           </div>
         </div>
       )}
@@ -171,3 +291,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

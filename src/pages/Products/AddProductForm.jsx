@@ -84,10 +84,7 @@ const AddProductForm = ({ onClose }) => {
       alert("Product added successfully!");
       onClose(); // Close the modal
 
-    } catch (error) {
-      console.error("Error adding product:", error);
-      alert("Failed to add product. Check console.");
-    } finally {
+    }  finally {
       setLoading(false);
     }
   };

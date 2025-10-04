@@ -50,7 +50,7 @@ const ProductList = () => {
     return <p style={{ color: '#fff', textAlign: 'center' }}>Loading products...</p>;
 
   return (
-    <div className="container">
+    <div className="container2">
       <h2>📦 Product List</h2>
 
       <input
@@ -61,36 +61,53 @@ const ProductList = () => {
         className="search-bar"
       />
 
-      {filteredProducts.length === 0 ? (
-        <p style={{ color: '#ccc', marginTop: '1rem' }}>No matching products found.</p>
-      ) : (
-        filteredProducts.map((product) => (
-          <div key={product.id} className="product-card">
-            {product.image && (
-              <img src={product.image} alt={product.name} className="product-image" />
-            )}
-            <div className="product-info">
-              <h3>{product.name}</h3>
-              <p>SKU: {product.sku || 'N/A'}</p>
-              <p>Category: {product.category || 'N/A'}</p>
-              <p>Supplier: {product.supplier || 'N/A'}</p>
-              <p>Quantity: {product.quantity}</p>
-              <p>Price: ₹{product.price}</p>
-              <p>Reorder Level: {product.reorderLevel || '-'}</p>
-              {product.expiryDate && <p>Expiry: {product.expiryDate}</p>}
-              {product.description && <p>{product.description}</p>}
-            </div>
-            <div className="product-actions">
-              <button onClick={() => navigate(`/edit-product/${product.id}`)}>✏️ Edit</button>
-              <button className="delete-btn" onClick={() => handleDelete(product.id)}>
-                🗑️ Delete
-              </button>
-            </div>
-          </div>
-        ))
-      )}
+{filteredProducts.map((product) => {
+  const stockStatus = Number(product.quantity || 0) === 0 ? 'out' : 
+                      Number(product.quantity || 0) <= 5 ? 'low' : 'good';
+
+  return (
+    <div key={product.id} className="recent-item">
+      <div className="recent-header">
+        <div className="product-icon">📦</div>
+        <div className={`stock-indicator ${stockStatus}`}></div>
+      </div>
+
+      <div className="recent-content">
+        <h4 className="product-name">{product.name}</h4>
+
+        {/* Quantity + Price */}
+        <div className="product-details">
+          <span className="product-qty">Qty: {product.quantity || 0}</span>
+          <span className="product-price">₹{Number(product.price || 0).toLocaleString()}</span>
+        </div>
+
+        {/* Category */}
+        <div className="product-category">{product.category || "Uncategorized"}</div>
+
+        {/* Supplier / SKU / Expiry */}
+        <div className="extra-details">
+          <p><strong>Supplier:</strong> {product.supplier || "N/A"}</p>
+          <p><strong>SKU:</strong> {product.sku || "N/A"}</p>
+          <p><strong>Expiry:</strong> {product.expiryDate || "N/A"}</p>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="product-actions">
+        <button onClick={() => navigate(`/edit-product/${product.id}`)}>✏️ Edit</button>
+        <button className="delete-btn" onClick={() => handleDelete(product.id)}>
+          🗑️ Delete
+        </button>
+      </div>
+    </div>
+  );
+})}
+
     </div>
   );
 };
 
 export default ProductList;
+
+
+
