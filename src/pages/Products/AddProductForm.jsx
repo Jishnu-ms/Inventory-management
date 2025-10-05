@@ -97,6 +97,7 @@ const AddProductForm = ({ onClose }) => {
       </div>
 
       <form onSubmit={handleSubmit} className="form">
+        <label>Name & SKU</label>  
         <div className="form-row">
           <input
             className="dark-input"
@@ -115,7 +116,7 @@ const AddProductForm = ({ onClose }) => {
             required
           />
         </div>
-
+        <label>Category & Supplier</label>  
         <div className="form-row">
           <select
             className="dark-input"
@@ -141,8 +142,9 @@ const AddProductForm = ({ onClose }) => {
             ))}
           </select>
         </div>
-
+        <label>Quantity & Price</label>  
         <div className="form-row">
+          
           <input
             className="dark-input"
             type="number"
@@ -160,7 +162,7 @@ const AddProductForm = ({ onClose }) => {
             required
           />
         </div>
-
+        <label>Reorder Level & Expiry Date</label>  
         <div className="form-row">
           <input
             className="dark-input"
@@ -176,7 +178,7 @@ const AddProductForm = ({ onClose }) => {
             onChange={handleChange}
           />
         </div>
-
+        <label>Description</label>
         <textarea
           name="description"
           placeholder="Product Description"

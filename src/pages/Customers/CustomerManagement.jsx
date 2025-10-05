@@ -15,7 +15,8 @@ const Customers = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [newCustomer, setNewCustomer] = useState({
+  const [currentCustomer, setCurrentCustomer] = useState({
+    id: null,
     name: "",
     phone: "",
     email: "",
@@ -24,8 +25,6 @@ const Customers = () => {
     dateJoined: new Date().toISOString().split("T")[0],
     history: [],
   });
-
-  const [editCustomer, setEditCustomer] = useState(null); // currently editing customer
 
   // Fetch customers
   const fetchCustomers = async () => {
@@ -47,21 +46,39 @@ const Customers = () => {
     fetchCustomers();
   }, []);
 
-  // Add new customer
+  // Handle form submit (add or update)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newCustomer.name || !newCustomer.phone) {
+
+    if (!currentCustomer.name || !currentCustomer.phone) {
       alert("⚠️ Please fill out Name and Phone Number.");
       return;
     }
 
     try {
-      await addDoc(collection(db, "customers"), {
-        ...newCustomer,
-        createdAt: serverTimestamp(),
-      });
-      alert("✅ Customer added successfully!");
-      setNewCustomer({
+      if (currentCustomer.id) {
+        // Update existing customer
+        const customerRef = doc(db, "customers", currentCustomer.id);
+        await updateDoc(customerRef, {
+          name: currentCustomer.name,
+          phone: currentCustomer.phone,
+          email: currentCustomer.email,
+          address: currentCustomer.address,
+          notes: currentCustomer.notes,
+        });
+        alert("✅ Customer updated successfully!");
+      } else {
+        // Add new customer
+        await addDoc(collection(db, "customers"), {
+          ...currentCustomer,
+          createdAt: serverTimestamp(),
+        });
+        alert("✅ Customer added successfully!");
+      }
+
+      // Reset form
+      setCurrentCustomer({
+        id: null,
         name: "",
         phone: "",
         email: "",
@@ -72,33 +89,23 @@ const Customers = () => {
       });
       fetchCustomers();
     } catch (error) {
-      console.error("Error adding customer:", error);
-      alert("❌ Failed to add customer. Please try again.");
+      console.error("Error saving customer:", error);
+      alert("❌ Failed to save customer.");
     }
   };
 
-  // Update customer
-  const handleUpdate = async () => {
-    if (!editCustomer.name || !editCustomer.phone) {
-      alert("⚠️ Name and Phone cannot be empty.");
-      return;
-    }
-    try {
-      const customerRef = doc(db, "customers", editCustomer.id);
-      await updateDoc(customerRef, {
-        name: editCustomer.name,
-        phone: editCustomer.phone,
-        email: editCustomer.email,
-        address: editCustomer.address,
-        notes: editCustomer.notes,
-      });
-      alert("✅ Customer updated successfully!");
-      setEditCustomer(null);
-      fetchCustomers();
-    } catch (error) {
-      console.error("Error updating customer:", error);
-      alert("❌ Failed to update customer.");
-    }
+  // Edit customer (populate form)
+  const handleEdit = (cust) => {
+    setCurrentCustomer({
+      id: cust.id,
+      name: cust.name || "",
+      phone: cust.phone || "",
+      email: cust.email || "",
+      address: cust.address || "",
+      notes: cust.notes || "",
+      dateJoined: cust.dateJoined || new Date().toISOString().split("T")[0],
+      history: cust.history || [],
+    });
   };
 
   // Delete customer
@@ -127,17 +134,18 @@ const Customers = () => {
     <div className="container">
       <h2 className="dashboard-title">👤 Customer Management</h2>
 
-      {/* Add Customer Form */}
+      {/* Add/Edit Customer Form */}
       <form className="form" onSubmit={handleSubmit}>
+        <label>Name & Phone Number</label>
         <div className="form-row">
           <input
             className="dark-input"
             type="text"
             name="name"
             placeholder="Full Name"
-            value={newCustomer.name}
+            value={currentCustomer.name}
             onChange={(e) =>
-              setNewCustomer({ ...newCustomer, name: e.target.value })
+              setCurrentCustomer({ ...currentCustomer, name: e.target.value })
             }
             required
           />
@@ -146,65 +154,90 @@ const Customers = () => {
             type="text"
             name="phone"
             placeholder="Phone Number"
-            value={newCustomer.phone}
+            value={currentCustomer.phone}
             onChange={(e) =>
-              setNewCustomer({ ...newCustomer, phone: e.target.value })
+              setCurrentCustomer({ ...currentCustomer, phone: e.target.value })
             }
             required
           />
         </div>
 
+        <label>Email</label>
         <div className="form-row">
           <input
             className="dark-input"
             type="email"
             name="email"
             placeholder="Email Address"
-            value={newCustomer.email}
+            value={currentCustomer.email}
             onChange={(e) =>
-              setNewCustomer({ ...newCustomer, email: e.target.value })
+              setCurrentCustomer({ ...currentCustomer, email: e.target.value })
             }
           />
         </div>
 
+        <label>Address</label>
         <textarea
           className="dark-input"
           name="address"
           placeholder="Customer Address"
-          value={newCustomer.address}
+          value={currentCustomer.address}
           onChange={(e) =>
-            setNewCustomer({ ...newCustomer, address: e.target.value })
+            setCurrentCustomer({ ...currentCustomer, address: e.target.value })
           }
           rows={3}
         />
 
+        <label>Notes</label>
         <textarea
           className="dark-input"
           name="notes"
           placeholder="Additional Notes"
-          value={newCustomer.notes}
+          value={currentCustomer.notes}
           onChange={(e) =>
-            setNewCustomer({ ...newCustomer, notes: e.target.value })
+            setCurrentCustomer({ ...currentCustomer, notes: e.target.value })
           }
           rows={2}
         />
 
+        <label>Date Joined</label>
         <div className="form-row">
           <input
             className="dark-input"
             type="date"
             name="dateJoined"
-            value={newCustomer.dateJoined}
+            value={currentCustomer.dateJoined}
             onChange={(e) =>
-              setNewCustomer({ ...newCustomer, dateJoined: e.target.value })
+              setCurrentCustomer({ ...currentCustomer, dateJoined: e.target.value })
             }
             disabled
           />
         </div>
 
-        <button type="submit">Add Customer</button>
-        <br />
+        <button type="submit">
+          {currentCustomer.id ? "Update Customer" : "Add Customer"}
+        </button>
+        {currentCustomer.id && (
+          <button
+            type="button"
+            onClick={() =>
+              setCurrentCustomer({
+                id: null,
+                name: "",
+                phone: "",
+                email: "",
+                address: "",
+                notes: "",
+                dateJoined: new Date().toISOString().split("T")[0],
+                history: [],
+              })
+            }
+          >
+            Cancel
+          </button>
+        )}
       </form>
+      <br></br>
 
       {/* Search Bar */}
       <input
@@ -223,122 +256,49 @@ const Customers = () => {
       ) : filteredCustomers.length === 0 ? (
         <p>No customers found.</p>
       ) : (
-         <div className="table-wrapper">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Address</th>
-              <th>Notes</th>
-              <th>Date Joined</th>
-              <th className="no-print">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCustomers.map((cust) => (
-              <tr key={cust.id}>
-                <td>{cust.name}</td>
-                <td>{cust.phone}</td>
-                <td>{cust.email || "-"}</td>
-                <td>{cust.address || "-"}</td>
-                <td>{cust.notes || "-"}</td>
-                <td>{cust.dateJoined}</td>
-                <td className="no-print">
-                  <button
-                    className="btn-edit"
-                    onClick={() => setEditCustomer(cust)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn-remove"
-                    onClick={() => handleDelete(cust.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="table-wrapper">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Notes</th>
+                <th>Date Joined</th>
+                <th className="no-print">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-         </div>
-      )}
-
-      {/* Edit Customer Popup */}
-      {editCustomer && (
-        <div className="edit-popup">
-          <div className="edit-popup-content">
-            <h3>Edit Customer</h3>
-            <div className="edit-item-row">
-              <span>Name:</span>
-              <input
-                type="text"
-                value={editCustomer.name}
-                onChange={(e) =>
-                  setEditCustomer({ ...editCustomer, name: e.target.value })
-                }
-              />
-            </div>
-            <div className="edit-item-row">
-              <span>Phone:</span>
-              <input
-                type="text"
-                value={editCustomer.phone}
-                onChange={(e) =>
-                  setEditCustomer({ ...editCustomer, phone: e.target.value })
-                }
-              />
-            </div>
-            <div className="edit-item-row">
-              <span>Email:</span>
-              <input
-                type="email"
-                value={editCustomer.email || ""}
-                onChange={(e) =>
-                  setEditCustomer({ ...editCustomer, email: e.target.value })
-                }
-              />
-            </div>
-            <div className="edit-item-row">
-              <span>Address:</span>
-              <input
-                type="text"
-                value={editCustomer.address || ""}
-                onChange={(e) =>
-                  setEditCustomer({ ...editCustomer, address: e.target.value })
-                }
-              />
-            </div>
-            <div className="edit-item-row">
-              <span>Notes:</span>
-              <input
-                type="text"
-                value={editCustomer.notes || ""}
-                onChange={(e) =>
-                  setEditCustomer({ ...editCustomer, notes: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="edit-popup-buttons">
-              <button className="btn-update" onClick={handleUpdate}>
-                Update
-              </button>
-              <button
-                className="btn-cancel"
-                onClick={() => setEditCustomer(null)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+            </thead>
+            <tbody>
+              {filteredCustomers.map((cust) => (
+                <tr key={cust.id}>
+                  <td>{cust.name}</td>
+                  <td>{cust.phone}</td>
+                  <td>{cust.email || "-"}</td>
+                  <td>{cust.address || "-"}</td>
+                  <td>{cust.notes || "-"}</td>
+                  <td>{cust.dateJoined}</td>
+                  <td className="no-print">
+                    <button
+                      className="btn-edit"
+                      onClick={() => handleEdit(cust)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn-remove"
+                      onClick={() => handleDelete(cust.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-       
       )}
     </div>
-    
   );
 };
 

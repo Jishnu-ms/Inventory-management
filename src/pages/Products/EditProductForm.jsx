@@ -111,10 +111,11 @@ const EditProductForm = ({ onClose }) => {
     <div className="container">
       <div className="form-header">
         <h2>💻 Edit Product</h2>
-        <button className="close-btn" onClick={onClose}>✖</button>
+        <button className="close-btn" onClick={onClose}></button>
       </div>
 
       <form className="form" onSubmit={handleSubmit}>
+        <label>Name & SKU</label>  
         <div className="form-row">
           <input className="dark-input" 
             type="text"
@@ -133,7 +134,7 @@ const EditProductForm = ({ onClose }) => {
             required
           />
         </div>
-
+        <label>Category & Supplier</label>  
         <div className="form-row">
           <select className="dark-input" name="category" value={product.category} onChange={handleChange} required>
             <option value="">Select Category</option>
@@ -150,8 +151,9 @@ const EditProductForm = ({ onClose }) => {
             ))}
           </select>
         </div>
-
+          <label>Quantity and Price</label>  
         <div className="form-row">
+          
           <input className="dark-input" 
             type="number"
             name="quantity"
@@ -160,6 +162,7 @@ const EditProductForm = ({ onClose }) => {
             onChange={handleChange}
             required
           />
+          
           <input className="dark-input" 
             type="number"
             name="price"
@@ -170,6 +173,7 @@ const EditProductForm = ({ onClose }) => {
           />
         </div>
 
+        <label> Reorder level & Expiry Date</label>  
         <div className="form-row">
           <input className="dark-input" 
             type="number"
@@ -185,7 +189,7 @@ const EditProductForm = ({ onClose }) => {
             onChange={handleChange}
           />
         </div>
-
+        <label>Description</label>  
         <textarea className="dark-input" 
           name="description"
           placeholder="Product Description"
@@ -194,7 +198,7 @@ const EditProductForm = ({ onClose }) => {
           rows={3}
         />
 
-        <input type="file" name="image" accept="image/*" onChange={handleChange} />
+      
 
         {imagePreview && <img src={imagePreview} alt="Preview" className="image-preview" />}
 

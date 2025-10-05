@@ -20,6 +20,23 @@
   -webkit-text-fill-color: transparent;
 }
 
+
+label {
+  color: #aaa;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dark-label {
+  color: #ccc;
+  font-size: 14px;
+  margin-bottom: 6px; /* small gap between label and input */
+}
+
 /* Form Header with Close */
 .form-header {
   display: flex;

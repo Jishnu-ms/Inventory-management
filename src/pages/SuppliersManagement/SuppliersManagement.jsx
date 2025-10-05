@@ -165,6 +165,7 @@ const SuppliersManagement = () => {
 
       {/* Add / Edit Supplier Form */}
       <form className="supplier-form" onSubmit={handleAddOrUpdateSupplier}>
+         <label>Supplier Name & Contact Person</label> 
         <div className="form-row">
           <input
             type="text"
@@ -180,6 +181,7 @@ const SuppliersManagement = () => {
             onChange={(e) => setNewSupplier({ ...newSupplier, contact: e.target.value })}
           />
         </div>
+         <label>Phone Number & Email</label> 
         <div className="form-row">
           <input
             type="text"
@@ -194,11 +196,13 @@ const SuppliersManagement = () => {
             onChange={(e) => setNewSupplier({ ...newSupplier, email: e.target.value })}
           />
         </div>
+         <label>Address</label> 
         <textarea
           placeholder="Address"
           value={newSupplier.address}
           onChange={(e) => setNewSupplier({ ...newSupplier, address: e.target.value })}
         />
+         <label>Notes</label> 
         <textarea
           placeholder="Notes"
           value={newSupplier.notes}

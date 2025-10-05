@@ -24,6 +24,17 @@
   margin-bottom: 1rem;
 }
 
+
+label {
+  color: #aaa;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .form-row {
   display: flex;
   gap: 1rem;
@@ -84,6 +95,13 @@
 /* Tables */
 .table-wrapper {
   overflow-x: auto;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+/* For WebKit browsers (Chrome, Safari, Opera) */
+.table-wrapper::-webkit-scrollbar {
+  display: none;
 }
 
 .supplier-table,

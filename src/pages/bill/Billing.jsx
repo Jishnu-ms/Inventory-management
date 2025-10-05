@@ -331,6 +331,8 @@ const Billing = () => {
             <p><strong>Date:</strong> {billDate}</p>
             {selectedCustomer && <p><strong>Customer:</strong> {selectedCustomer}</p>}
           </div>
+           
+          <div className="table-wrapper">
 
           <table className="bill-table">
             <thead>
@@ -360,11 +362,14 @@ const Billing = () => {
               <tr><td colSpan="3"><strong>Tax (18%)</strong></td><td colSpan="2">₹{taxAmount.toFixed(2)}</td></tr>
               <tr><td colSpan="3"><strong>Total</strong></td><td colSpan="2">₹{totalAmount.toFixed(2)}</td></tr>
             </tfoot>
+            
           </table>
-
+          
+ </div>
           <button className="print-btn no-print" onClick={handlePrint}>🖨️ Print & Save Bill</button>
        
 
+       
         </div>
       )}
 

@@ -13,9 +13,16 @@ import "./StaffManagement.css";
 
 const StaffManagement = () => {
   const [staffs, setStaffs] = useState([]);
-  const [newStaff, setNewStaff] = useState({ name: "", email: "", phone: "", role: "" });
   const [searchQuery, setSearchQuery] = useState("");
-  const [editStaff, setEditStaff] = useState(null); // staff object being edited
+
+  // single state for both adding and editing
+  const [currentStaff, setCurrentStaff] = useState({
+    id: null,
+    name: "",
+    email: "",
+    phone: "",
+    role: "",
+  });
 
   // Fetch staff list
   const fetchStaffs = async () => {
@@ -32,61 +39,62 @@ const StaffManagement = () => {
     fetchStaffs();
   }, []);
 
-  // Add new staff
-  const handleAddStaff = async (e) => {
+  // Add or Update Staff
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newStaff.name || !newStaff.email || !newStaff.role) {
+
+    if (!currentStaff.name || !currentStaff.email || !currentStaff.role) {
       alert("Please fill all required fields!");
       return;
     }
 
     try {
-      await addDoc(collection(db, "staff"), {
-        ...newStaff,
-        joinedAt: serverTimestamp(),
-      });
-      alert("Staff added successfully!");
-      setNewStaff({ name: "", email: "", phone: "", role: "" });
+      if (currentStaff.id) {
+        // Update existing staff
+        await updateDoc(doc(db, "staff", currentStaff.id), {
+          name: currentStaff.name,
+          email: currentStaff.email,
+          phone: currentStaff.phone,
+          role: currentStaff.role,
+        });
+        alert("✅ Staff updated successfully!");
+      } else {
+        // Add new staff
+        await addDoc(collection(db, "staff"), {
+          ...currentStaff,
+          joinedAt: serverTimestamp(),
+        });
+        alert("✅ Staff added successfully!");
+      }
+
+      // Reset form
+      setCurrentStaff({ id: null, name: "", email: "", phone: "", role: "" });
       fetchStaffs();
     } catch (error) {
-      console.error("Error adding staff:", error);
+      console.error("Error saving staff:", error);
+      alert("❌ Failed to save staff.");
     }
+  };
+
+  // Edit staff (populate form)
+  const handleEdit = (staff) => {
+    setCurrentStaff({
+      id: staff.id,
+      name: staff.name || "",
+      email: staff.email || "",
+      phone: staff.phone || "",
+      role: staff.role || "",
+    });
   };
 
   // Delete staff
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this staff?")) {
-      try {
-        await deleteDoc(doc(db, "staff", id));
-        fetchStaffs();
-      } catch (error) {
-        console.error("Error deleting staff:", error);
-      }
-    }
-  };
-
-  // Start edit
-  const handleEdit = (staff) => {
-    setEditStaff(staff);
-  };
-
-  // Update staff
-  const handleUpdate = async () => {
-    if (!editStaff.name || !editStaff.email || !editStaff.role) {
-      alert("Please fill all required fields!");
-      return;
-    }
+    if (!window.confirm("Are you sure you want to delete this staff?")) return;
     try {
-      await updateDoc(doc(db, "staff", editStaff.id), {
-        name: editStaff.name,
-        email: editStaff.email,
-        phone: editStaff.phone,
-        role: editStaff.role,
-      });
-      setEditStaff(null);
+      await deleteDoc(doc(db, "staff", id));
       fetchStaffs();
     } catch (error) {
-      console.error("Error updating staff:", error);
+      console.error("Error deleting staff:", error);
     }
   };
 
@@ -102,40 +110,54 @@ const StaffManagement = () => {
     <div className="staff-container">
       <h2 className="dashboard-title">👥 Staff Management</h2>
 
-      {/* Add Staff Form */}
-      <form onSubmit={handleAddStaff} className="staff-form">
+      {/* Add / Edit Staff Form */}
+      <form onSubmit={handleSubmit} className="staff-form">
+         <label>Name & Email</label>
         <div className="form-row">
           <input
             type="text"
             placeholder="Name"
-            value={newStaff.name}
-            onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
+            value={currentStaff.name}
+            onChange={(e) => setCurrentStaff({ ...currentStaff, name: e.target.value })}
             required
           />
           <input
             type="email"
             placeholder="Email"
-            value={newStaff.email}
-            onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
+            value={currentStaff.email}
+            onChange={(e) => setCurrentStaff({ ...currentStaff, email: e.target.value })}
             required
           />
         </div>
+
+         <label>Phone Number & Role</label>
         <div className="form-row">
           <input
             type="text"
             placeholder="Phone"
-            value={newStaff.phone}
-            onChange={(e) => setNewStaff({ ...newStaff, phone: e.target.value })}
+            value={currentStaff.phone}
+            onChange={(e) => setCurrentStaff({ ...currentStaff, phone: e.target.value })}
           />
           <input
             type="text"
             placeholder="Role"
-            value={newStaff.role}
-            onChange={(e) => setNewStaff({ ...newStaff, role: e.target.value })}
+            value={currentStaff.role}
+            onChange={(e) => setCurrentStaff({ ...currentStaff, role: e.target.value })}
             required
           />
         </div>
-        <button type="submit">Add Staff</button>
+
+        <button type="submit">
+          {currentStaff.id ? "Update Staff" : "Add Staff"}
+        </button>
+        {currentStaff.id && (
+          <button
+            type="button"
+            onClick={() => setCurrentStaff({ id: null, name: "", email: "", phone: "", role: "" })}
+          >
+            Cancel
+          </button>
+        )}
       </form>
 
       {/* Search Bar */}
@@ -148,7 +170,6 @@ const StaffManagement = () => {
       />
 
       {/* Staff List */}
-     
       {filteredStaffs.length === 0 ? (
         <p className="no-records">No staff found.</p>
       ) : (
@@ -172,9 +193,7 @@ const StaffManagement = () => {
                   <td>{s.phone || "-"}</td>
                   <td>{s.role}</td>
                   <td>
-                    {s.joinedAt?.toDate
-                      ? s.joinedAt.toDate().toLocaleDateString()
-                      : "-"}
+                    {s.joinedAt?.toDate ? s.joinedAt.toDate().toLocaleDateString() : "-"}
                   </td>
                   <td>
                     <button className="btn-edit" onClick={() => handleEdit(s)}>Edit</button>
@@ -184,51 +203,6 @@ const StaffManagement = () => {
               ))}
             </tbody>
           </table>
-        </div>
-      )}
-
-      {/* Edit Staff Popup */}
-      {editStaff && (
-        <div className="edit-popup">
-          <div className="edit-popup-content">
-            <h3>Edit Staff</h3>
-            <div className="edit-item-row">
-              <label>Name:</label>
-              <input
-                type="text"
-                value={editStaff.name}
-                onChange={(e) => setEditStaff({ ...editStaff, name: e.target.value })}
-              />
-            </div>
-            <div className="edit-item-row">
-              <label>Email:</label>
-              <input
-                type="email"
-                value={editStaff.email}
-                onChange={(e) => setEditStaff({ ...editStaff, email: e.target.value })}
-              />
-            </div>
-            <div className="edit-item-row">
-              <label>Phone:</label>
-              <input
-                type="text"
-                value={editStaff.phone}
-                onChange={(e) => setEditStaff({ ...editStaff, phone: e.target.value })}
-              />
-            </div>
-            <div className="edit-item-row">
-              <label>Role:</label>
-              <input
-                type="text"
-                value={editStaff.role}
-                onChange={(e) => setEditStaff({ ...editStaff, role: e.target.value })}
-              />
-            </div>
-            <div className="edit-popup-buttons">
-              <button className="btn-update" onClick={handleUpdate}>Update</button>
-              <button className="btn-cancel" onClick={() => setEditStaff(null)}>Cancel</button>
-            </div>
-          </div>
         </div>
       )}
     </div>

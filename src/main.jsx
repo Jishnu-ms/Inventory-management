@@ -5,6 +5,8 @@ import './styles/dark-theme.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <div style={{ overflowX: 'hidden' }}>
     <App />
+    </div>
   </React.StrictMode>
 );
