@@ -91,15 +91,7 @@ const App = () => {
                 element={<ProductList products={products} deleteProduct={deleteProduct} />}
               />
 
-              <Route
-                path="/add-product"
-                element={isAdmin ? <AddProductForm addProduct={addProduct} /> : <Navigate to="/" />}
-              />
-
-              <Route
-                path="/edit-product/:id"
-                element={isAdmin ? <EditProductForm /> : <Navigate to="/" />}
-              />
+           
 
               <Route
                 path="/billing"
@@ -114,15 +106,15 @@ const App = () => {
 
               <Route path="/customers" element={<Customers customers={customers} />} />
 
-              <Route
-                path="/staff"
-                element={isAdmin ? <StaffManagement /> : <Navigate to="/" />}
-              />
+              <Route path="/add-product" element={<AddProductForm addProduct={addProduct} />} />
 
-              <Route
-                path="/suppliers"
-                element={isAdmin ? <SuppliersManagement /> : <Navigate to="/" />}
-              />
+<Route path="/edit-product/:id" element={<EditProductForm />} />
+
+<Route path="/staff" element={<StaffManagement />} />
+
+<Route path="/suppliers" element={<SuppliersManagement />} />
+
+            
 
               {/* Any wrong route goes dashboard */}
               <Route path="*" element={<Navigate to="/" />} />
