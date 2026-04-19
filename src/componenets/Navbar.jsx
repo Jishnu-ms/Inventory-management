@@ -49,15 +49,15 @@ const Navbar = ({ user, isAdmin, onLogout }) => {
     };
   }, [menuOpen]);
 
-  const navigationLinks = [
-    { path: '/', label: '📊 Dashboard', icon: '📊' },
-    { path: '/products', label: '📦 Products', icon: '📦' },
-    ...(isAdmin ? [{ path: '/add-product', label: '➕ Add Product', icon: '➕' }] : []),
-    { path: '/billing', label: '🧾 Billing', icon: '🧾' },
-    ...(isAdmin ? [{ path: '/customers', label: '👥 Customers', icon: '👥' }] : []),
-    ...(isAdmin ? [{ path: '/staff', label: '👨‍💼 Staff', icon: '👨‍💼' }] : []),
-    ...(isAdmin ? [{ path: '/suppliers', label: '🏭 Suppliers', icon: '🏭' }] : []),
-  ];
+const navigationLinks = [
+  { path: '/', label: '📊 Dashboard', icon: '📊' },
+  { path: '/products', label: '📦 Products', icon: '📦' },
+  { path: '/add-product', label: '➕ Add Product', icon: '➕' },
+  { path: '/billing', label: '🧾 Billing', icon: '🧾' },
+  { path: '/customers', label: '👥 Customers', icon: '👥' },
+  { path: '/staff', label: '👨‍💼 Staff', icon: '👨‍💼' },
+  { path: '/suppliers', label: '🏭 Suppliers', icon: '🏭' },
+];
 
   return (
     <>
